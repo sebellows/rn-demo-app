@@ -1,20 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar'
+import { Text } from 'react-native'
+import { ThemeProvider } from './src/style-utils'
+import { useState } from 'react'
+import { resolveTheme } from './src/theme'
+import { Card } from './src/components'
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [darkMode, toggleDarkMode] = useState(false)
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  return (
+    <ThemeProvider mode={darkMode ? 'dark' : 'light'} themeResolver={resolveTheme}>
+      <Card variant="base">
+        <Text>Open up App.tsx to start working on your app!</Text>
+        <StatusBar style="auto" />
+      </Card>
+    </ThemeProvider>
+  )
+}

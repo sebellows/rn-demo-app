@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
+    "test": "jest",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "type-check": "tsc -b"
   },
   "dependencies": {
     "expo": "~48.0.18",
@@ -16,7 +18,15 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@types/jest": "^29.5.3",
     "@types/react": "~18.0.14",
+    "@types/react-test-renderer": "^18.0.0",
+    "babel-jest": "^29.6.1",
+    "jest": "^29.6.1",
+    "prettier": "^3.0.0",
+    "react-native-test-app": "^2.5.10",
+    "react-test-renderer": "^18.2.0",
+    "type-fest": "^3.13.0",
     "typescript": "^4.9.4"
   },
   "private": true

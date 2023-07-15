@@ -3,7 +3,7 @@ import { TextStyle, FlexStyle, ViewStyle } from 'react-native'
 import { getKeys } from '@/utils'
 
 import { createStyleFunction } from './createStyleFunction'
-import { Breakpoints, ResponsiveValue, RNStyleProperty, Theme, ThemeColorKey } from './types'
+import { Breakpoints, ResponsiveValue, RNStyleProperty, RootTheme, ThemeColorKey } from './types'
 
 const spacingProperties = {
   margin: true,
@@ -279,86 +279,92 @@ export const all = [
   ...textShadow,
 ]
 
-export interface ColorProps {
-  color?: ResponsiveValue<ThemeColorKey, Breakpoints>
-  textDecorationColor?: ResponsiveValue<ThemeColorKey, Breakpoints>
+export interface ColorProps<TTheme extends RootTheme> {
+  color?: ResponsiveValue<ThemeColorKey<TTheme>, Breakpoints<TTheme>>
+  textDecorationColor?: ResponsiveValue<ThemeColorKey<TTheme>, Breakpoints<TTheme>>
 }
-export interface OpacityProps {
-  opacity?: ResponsiveValue<number, Breakpoints>
-}
-
-export interface VisibleProps {
-  visible?: ResponsiveValue<boolean, Breakpoints>
+export interface OpacityProps<TTheme extends RootTheme> {
+  opacity?: ResponsiveValue<number, Breakpoints<TTheme>>
 }
 
-export interface BackgroundColorProps {
-  backgroundColor?: ResponsiveValue<ThemeColorKey, Breakpoints>
+export interface VisibleProps<TTheme extends RootTheme> {
+  visible?: ResponsiveValue<boolean, Breakpoints<TTheme>>
 }
 
-export interface BackgroundColorShorthandProps {
-  bg?: ResponsiveValue<ThemeColorKey, Breakpoints>
+export interface BackgroundColorProps<TTheme extends RootTheme> {
+  backgroundColor?: ResponsiveValue<ThemeColorKey<TTheme>, Breakpoints<TTheme>>
 }
 
-export type SpacingProps = {
-  [Key in keyof typeof spacingProperties]?: ResponsiveValue<keyof Theme['spacing'], Breakpoints>
+export interface BackgroundColorShorthandProps<TTheme extends RootTheme> {
+  bg?: ResponsiveValue<ThemeColorKey<TTheme>, Breakpoints<TTheme>>
 }
 
-export type SpacingShorthandProps = {
-  [Key in keyof typeof spacingPropertiesShorthand]?: ResponsiveValue<
-    keyof Theme['spacing'],
-    Breakpoints
+export type SpacingProps<TTheme extends RootTheme> = {
+  [Key in keyof typeof spacingProperties]?: ResponsiveValue<
+    keyof TTheme['spacing'],
+    Breakpoints<TTheme>
   >
 }
 
-export type TypographyProps = {
-  [Key in keyof typeof typographyProperties]?: ResponsiveValue<TextStyle[Key], Breakpoints>
+export type SpacingShorthandProps<TTheme extends RootTheme> = {
+  [Key in keyof typeof spacingPropertiesShorthand]?: ResponsiveValue<
+    keyof TTheme['spacing'],
+    Breakpoints<TTheme>
+  >
 }
 
-export type LayoutProps = {
-  [Key in keyof typeof layoutProperties]?: ResponsiveValue<FlexStyle[Key], Breakpoints>
+export type TypographyProps<TTheme extends RootTheme> = {
+  [Key in keyof typeof typographyProperties]?: ResponsiveValue<TextStyle[Key], Breakpoints<TTheme>>
 }
 
-export type PositionProps = {
-  [Key in keyof typeof positionProperties]?: ResponsiveValue<FlexStyle[Key], Breakpoints>
+export type LayoutProps<TTheme extends RootTheme> = {
+  [Key in keyof typeof layoutProperties]?: ResponsiveValue<FlexStyle[Key], Breakpoints<TTheme>>
+}
+
+export type PositionProps<TTheme extends RootTheme> = {
+  [Key in keyof typeof positionProperties]?: ResponsiveValue<FlexStyle[Key], Breakpoints<TTheme>>
 } & {
   zIndex?: ResponsiveValue<
-    Theme['zIndices'] extends object ? keyof Theme['zIndices'] : number,
-    Breakpoints
+    TTheme['zIndices'] extends object ? keyof TTheme['zIndices'] : number,
+    Breakpoints<TTheme>
   >
 }
 
-export type BorderProps = {
-  [Key in keyof typeof borderProperties]?: ResponsiveValue<ViewStyle[Key], Breakpoints>
+export type BorderProps<TTheme extends RootTheme> = {
+  [Key in keyof typeof borderProperties]?: ResponsiveValue<ViewStyle[Key], Breakpoints<TTheme>>
 } & {
-  [Key in keyof typeof borderColorProperties]?: ResponsiveValue<ThemeColorKey, Breakpoints>
+  [Key in keyof typeof borderColorProperties]?: ResponsiveValue<
+    ThemeColorKey<TTheme>,
+    Breakpoints<TTheme>
+  >
 } & {
   [Key in keyof typeof borderRadiusProperties]?: ResponsiveValue<
-    Theme['rounded'] extends object ? keyof Theme['rounded'] : number,
-    Breakpoints
+    TTheme['borderRadii'] extends object ? keyof TTheme['borderRadii'] : number,
+    Breakpoints<TTheme>
   >
 }
 
-export type ShadowProps = {
-  [Key in keyof typeof shadowProperties]?: ResponsiveValue<ViewStyle[Key], Breakpoints>
+export type ShadowProps<TTheme extends RootTheme> = {
+  [Key in keyof typeof shadowProperties]?: ResponsiveValue<ViewStyle[Key], Breakpoints<TTheme>>
 } & {
-  shadowColor?: ResponsiveValue<ThemeColorKey, Breakpoints>
+  shadowColor?: ResponsiveValue<ThemeColorKey<TTheme>, Breakpoints<TTheme>>
 }
 
-export type TextShadowProps = {
-  [Key in keyof typeof textShadowProperties]?: ResponsiveValue<TextStyle[Key], Breakpoints>
+export type TextShadowProps<TTheme extends RootTheme> = {
+  [Key in keyof typeof textShadowProperties]?: ResponsiveValue<TextStyle[Key], Breakpoints<TTheme>>
 } & {
-  textShadowColor?: ResponsiveValue<ThemeColorKey, Breakpoints>
+  textShadowColor?: ResponsiveValue<ThemeColorKey<TTheme>, Breakpoints<TTheme>>
 }
 
-export type AllProps = BackgroundColorProps &
-  BackgroundColorShorthandProps &
-  ColorProps &
-  OpacityProps &
-  SpacingProps &
-  SpacingShorthandProps &
-  TypographyProps &
-  LayoutProps &
-  PositionProps &
-  BorderProps &
-  ShadowProps &
-  TextShadowProps
+export type AllProps<TTheme extends RootTheme> = BackgroundColorProps<TTheme> &
+  BackgroundColorShorthandProps<TTheme> &
+  ColorProps<TTheme> &
+  OpacityProps<TTheme> &
+  SpacingProps<TTheme> &
+  SpacingShorthandProps<TTheme> &
+  TypographyProps<TTheme> &
+  LayoutProps<TTheme> &
+  PositionProps<TTheme> &
+  BorderProps<TTheme> &
+  ShadowProps<TTheme> &
+  TextShadowProps<TTheme>

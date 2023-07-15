@@ -2,7 +2,7 @@ import React from 'react'
 import { create as render } from 'react-test-renderer'
 import { View, ViewProps } from 'react-native'
 
-import createStyleComponent from '../createStyleComponent'
+import { createStyleComponent } from '../createStyleComponent'
 import {
   backgroundColor,
   BackgroundColorProps,
@@ -13,10 +13,11 @@ import {
   OpacityProps,
   opacity,
 } from '../styleFunctions'
-import { ThemeProvider } from '../theme.context'
-import createVariant, { VariantProps } from '../createVariant'
+import { ThemeProvider } from '@/theme/theme.context'
+import { VariantProps, createVariant } from '../createVariant'
+import { createTheme } from '../../theme'
 
-const theme = {
+const theme = createTheme('light', {
   colors: {
     coral: '#FFE6E4',
     lightcyan: '#E0FFFF',
@@ -33,8 +34,8 @@ const theme = {
     barelyVisible: 0.1,
     almostOpaque: 0.9,
   },
-}
-const themeWithVariant = {
+})
+const themeWithVariant = createTheme('light', {
   ...theme,
   cardVariants: {
     defaults: {
@@ -46,9 +47,7 @@ const themeWithVariant = {
       backgroundColor: 'lightcyan',
     },
   },
-}
-
-const { breakpoints, ...themeWithoutBreakpoints } = theme
+})
 
 type Theme = typeof theme
 type ThemeWithVariant = typeof themeWithVariant
@@ -89,15 +88,6 @@ describe('createStyleComponent', () => {
     it('passes styles based on the given props', () => {
       const { root } = render(
         <ThemeProvider theme={theme}>
-          <Component opacity={0.5} />
-        </ThemeProvider>,
-      )
-      expect(root.findByType(View).props.style).toStrictEqual([{ opacity: 0.5 }])
-    })
-
-    it('passes styles based on the given props for theme without breakpoints', () => {
-      const { root } = render(
-        <ThemeProvider theme={themeWithoutBreakpoints}>
           <Component opacity={0.5} />
         </ThemeProvider>,
       )

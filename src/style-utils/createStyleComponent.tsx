@@ -2,21 +2,25 @@ import React, { PropsWithChildren } from 'react'
 import { View } from 'react-native'
 
 import { composeStyleFunctions } from './composeStyleFunctions'
-import { AnyProps, StyleFunctionContainer } from './types'
+import { AnyProps, RootTheme, StyleFunctionContainer } from './types'
 import { useStyle } from './hooks/useStyle'
 
 export type StyledComponentProps<
   C extends React.ComponentType<any> = typeof View,
   Props extends AnyProps = AnyProps,
-> = React.ComponentProps<C> & PropsWithChildren<Props>
+> = React.ComponentPropsWithRef<C> &
+  Omit<PropsWithChildren<Props>, keyof React.ComponentPropsWithRef<C>>
 
-const createStyleComponent = <Props extends StyledComponentProps>(
-  styleFunctions: (StyleFunctionContainer<Props> | StyleFunctionContainer<Props>[])[],
+const createStyleComponent = <Props extends StyledComponentProps, TTheme extends RootTheme>(
+  styleFunctions: (
+    | StyleFunctionContainer<Props, TTheme>
+    | StyleFunctionContainer<Props, TTheme>[]
+  )[],
   BaseComponent: React.ComponentType<any> = View,
 ) => {
   const composedStyleFunction = composeStyleFunctions(styleFunctions)
 
-  const StyleComponent = React.forwardRef((props: Props, ref) => {
+  const StyleComponent = React.forwardRef<typeof BaseComponent, Props>((props, ref) => {
     const passedProps = useStyle(composedStyleFunction, props)
     return <BaseComponent ref={ref} {...passedProps} />
   })

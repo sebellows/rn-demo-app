@@ -42,11 +42,3 @@ function getWidth(value: Breakpoint) {
 
   return value
 }
-
-function getHeight(value: Breakpoint) {
-  if (isPlainObject(value)) {
-    return value.height
-  }
-
-  return value
-}

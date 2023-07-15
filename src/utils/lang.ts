@@ -1,7 +1,7 @@
 import { Constructor, ValueOf } from 'type-fest'
 
 import { hasOwn } from './common'
-import { AsyncCallback, AsyncFunction, Callback } from './type.utils'
+import { AsyncCallback, AsyncFunction, Callback } from '@/types'
 
 /**
  * @internal
@@ -255,6 +255,10 @@ export function isNumber(value: unknown): value is number {
   }
 
   return is(value, 'number')
+}
+
+export function isBoolean(value: unknown): value is boolean {
+  return is(value, 'boolean')
 }
 
 export function isString(value: unknown): value is string {

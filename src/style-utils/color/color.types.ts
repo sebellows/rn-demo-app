@@ -55,11 +55,14 @@ export const ColorVariantNames = [
 ] as const
 
 export type ColorVariant = (typeof ColorVariantNames)[number]
-
 export type ColorVariants = Record<ColorVariant, ColorAccents>
 
-// export type ColorVariables<
-//   CVars extends { [key: string]: string } = { [key: string]: string },
-//   CName extends keyof CVars = keyof CVars,
-// > = Record<CName, CVars[CName]>
-// export type ColorVariables = Record<string, string>
+export const ColorModes = ['light', 'dark'] as const
+export type ColorMode = (typeof ColorModes)[number]
+
+export type ColorSchemes = {
+  light: ColorVariants
+  dark: ColorVariants
+}
+
+export type ColorVariables = Record<string, string>

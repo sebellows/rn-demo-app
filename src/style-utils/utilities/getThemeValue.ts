@@ -1,6 +1,9 @@
-import { BaseTheme, PropValue, StyleTransformer, Theme, ThemeKey } from '../types'
+import { PropValue, RootTheme, StyleTransformer } from '../types'
 
-function isThemeKey<Key extends ThemeKey>(theme: Theme, key: unknown): key is Key {
+function isThemeKey<TTheme extends RootTheme, Key extends keyof TTheme>(
+  theme: TTheme,
+  key: unknown,
+): key is Key {
   if (typeof key === 'string' && key in theme && theme[key] !== undefined) {
     return true
   }
@@ -10,20 +13,25 @@ function isThemeKey<Key extends ThemeKey>(theme: Theme, key: unknown): key is Ke
 /**
  * Returns value from a theme for a given `themeKey`, applying `transform` if defined.
  */
-export function getThemeValue<TVal extends PropValue, K extends ThemeKey = ThemeKey>(
+export function getThemeValue<
+  TVal extends PropValue,
+  TTheme extends RootTheme,
+  K extends keyof TTheme = keyof TTheme,
+>(
   value: TVal | undefined,
   {
     theme,
     transform,
     themeKey,
   }: {
-    theme: Theme
-    transform?: StyleTransformer<K, TVal>
+    theme: TTheme
+    transform?: StyleTransformer<TTheme, K, TVal>
     themeKey?: K
   },
 ) {
-  if (transform) return transform({ value, theme, themeKey })
   if (isThemeKey(theme, themeKey)) {
+    if (transform) return transform({ value, theme, themeKey })
+
     if (value && theme[themeKey][value as string] === undefined)
       throw new Error(`Value '${value}' does not exist in theme['${String(themeKey)}']`)
 

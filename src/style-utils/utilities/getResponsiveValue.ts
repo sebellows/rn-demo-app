@@ -1,12 +1,11 @@
+import { ValueOf } from 'type-fest'
 import {
   Dimensions,
   PropValue,
   ResponsiveValue,
   StyleTransformer,
-  ThemeKey,
   Breakpoints,
-  Theme,
-  ThemeValue,
+  RootTheme,
 } from '../types'
 
 import { getThemeValue } from './getThemeValue'
@@ -16,7 +15,11 @@ import { isResponsiveObjectValue } from './isResponsiveObjectValue'
 /**
  * Gets actual value for a given `themeKey` based on `breakpoints` and current `dimensions`.
  */
-export const getResponsiveValue = <TVal extends PropValue, K extends ThemeKey>(
+export const getResponsiveValue = <
+  TVal extends PropValue,
+  TTheme extends RootTheme,
+  K extends keyof TTheme,
+>(
   propValue: ResponsiveValue<TVal, Breakpoints>,
   {
     theme,
@@ -24,12 +27,12 @@ export const getResponsiveValue = <TVal extends PropValue, K extends ThemeKey>(
     dimensions,
     themeKey,
   }: {
-    theme: Theme
-    transform?: StyleTransformer<K, TVal>
+    theme: TTheme
+    transform?: StyleTransformer<TTheme, K, TVal>
     dimensions: Dimensions
     themeKey?: K
   },
-): (K extends ThemeKey ? ThemeValue<K> : never) | TVal | null | undefined => {
+): (K extends keyof TTheme ? ValueOf<TTheme, K> : never) | TVal | null | undefined => {
   const val = isResponsiveObjectValue(propValue, theme)
     ? getValueForScreenSize({
         responsiveValue: propValue,

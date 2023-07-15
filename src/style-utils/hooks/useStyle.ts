@@ -3,7 +3,7 @@ import { StyleProp, useWindowDimensions } from 'react-native'
 
 import { Theme, RNStyle, Dimensions, AnyProps } from '../types'
 
-import { useTheme } from './useTheme'
+import { useTheme } from '@/theme/useTheme'
 
 const filterStyleProps = <TStyleProps, TProps extends { [key: string]: unknown } & TStyleProps>(
   componentProps: TProps,

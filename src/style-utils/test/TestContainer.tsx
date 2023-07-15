@@ -1,25 +1,26 @@
-import React from 'react';
-import {View, ViewProps} from 'react-native';
+import React from 'react'
+import { View, ViewProps } from 'react-native'
 
-import useStyle from '../hooks/useStyle';
-import createVariant, {VariantProps} from '../createVariant';
-import composeStyleFunctions from '../composeStyleFunctions';
+import { useStyle } from '../hooks/useStyle'
+import { createVariant, VariantProps } from '../createVariant'
+import { composeStyleFunctions } from '../composeStyleFunctions'
 import {
   backgroundColor,
   BackgroundColorProps,
   BorderProps,
   spacing,
   SpacingProps,
-} from '../styleFunctions';
+} from '../styleFunctions'
+import { createTheme } from '../../theme'
 
 const palette = {
   purple: '#5A31F4',
   green: '#099C77',
   black: '#101010',
   white: '#FFF',
-};
+}
 
-export const theme = {
+export const theme = createTheme('light', {
   colors: {
     background: palette.purple,
   },
@@ -46,23 +47,23 @@ export const theme = {
       },
     },
   },
-};
-type Theme = typeof theme;
+})
 
+type Theme = typeof theme
 type StyleProps = SpacingProps<Theme> &
   BorderProps<Theme> &
   BackgroundColorProps<Theme> &
-  VariantProps<Theme, 'spacingVariant'>;
+  VariantProps<Theme, 'spacingVariant'>
 
 const styleFunctions = composeStyleFunctions<Theme, StyleProps>([
   spacing,
   backgroundColor,
-  createVariant({themeKey: 'spacingVariant'}),
-]);
+  createVariant({ themeKey: 'spacingVariant' }),
+])
 
-type Props = StyleProps & ViewProps;
+type Props = StyleProps & ViewProps
 
-export const Container = ({children, ...rest}: Props) => {
-  const props = useStyle(styleFunctions, rest);
-  return <View {...props}>{children}</View>;
-};
+export const Container = ({ children, ...rest }: Props) => {
+  const props = useStyle(styleFunctions, rest)
+  return <View {...props}>{children}</View>
+}

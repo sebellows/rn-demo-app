@@ -1,9 +1,7 @@
 import { ImageStyle, TextStyle, ViewStyle, StyleProp } from 'react-native'
-import { Except, Get, StringKeyOf, ValueOf } from 'type-fest'
+import { Except, StringKeyOf, ValueOf } from 'type-fest'
 
-// import { TTheme as AppTheme } from '../theme'
-
-import { ColorAccents, ColorPalette, ColorVariants } from './color/color.types'
+import { ColorMode, ColorVariables } from './color/color.types'
 
 type NestedKeyOf<ObjectType extends object> = {
   [Key in keyof ObjectType & (string | number)]: ObjectType[Key] extends object
@@ -15,7 +13,12 @@ export type AnyProps = { [key: string]: any }
 
 export type Breakpoint = number | Dimensions
 
-type VariantsWithDefaults = { defaults: AnyProps } & AnyProps
+// interface VariantsWithDefaults {
+//   [key: `${string}Variants`]: {
+//     defaults: AnyProps
+//     [key: string]: any
+//   }
+// }
 
 export interface Dimensions {
   width: number
@@ -32,9 +35,15 @@ export type RNStyleProperty = keyof ViewStyle | keyof TextStyle | keyof ImageSty
 
 export type PropValue = string | number | undefined | null
 
-export interface ThemeColors extends ColorPalette, ColorVariants {
+type ThemeColorVariables = {
+  variables?: ColorVariables
+}
+type ThemeColorConfig = {
   [key: string]: string | Record<string, string>
 }
+export type ThemeColorsCustomConfig = ThemeColorVariables & ThemeColorConfig
+export type ThemeColors<TColors extends ThemeColorConfig = ThemeColorConfig> = TColors &
+  Omit<ThemeColorConfig, keyof TColors>
 
 interface KnownBaseTheme {
   breakpoints: Record<string, Breakpoint>
@@ -44,42 +53,47 @@ interface KnownBaseTheme {
 }
 
 export interface BaseTheme extends KnownBaseTheme {
+  mode?: ColorMode
   [key: string]: any
 }
 
-export interface ResponsiveBaseTheme extends BaseTheme {
-  breakpoints: Record<string, Breakpoint>
+type RNStyleBlock = Record<RNStyleProperty, PropValue>
+export interface WithVariants {
+  // breakpoints: Record<string, Breakpoint>
+  // [key: `${string}Variants`]: VariantsWithDefaults
+  [key: `${string}Variants`]: {
+    defaults: RNStyleBlock
+    [key: string]: RNStyleBlock
+  }
 }
 
-export interface Theme extends ResponsiveBaseTheme {
+export interface RootTheme extends BaseTheme, WithVariants {
   colors: ThemeColors
   // textVariants: VariantsWithDefaults
   // cardVariants: VariantsWithDefaults
   // inputVariants?: VariantsWithDefaults
   // buttonVariants?: VariantsWithDefaults
   // layoutVariants: VariantsWithDefaults
-  variant?: VariantsWithDefaults
-  [key: `${string}Variants`]: VariantsWithDefaults
-  [key: string]: any
+  // [key: `${string}Variants`]: VariantsWithDefaults
+  // [key: string]: any
 }
 
-/** @deprecated */
-export type ThemeKeyOrPath = NestedKeyOf<Theme>
-export type ThemeKey = StringKeyOf<Theme> | NestedKeyOf<Theme>
-export type ThemeValue<K extends ThemeKey> = Get<Theme, K>
+export interface CustomTheme extends Omit<Partial<RootTheme>, 'colors'> {
+  colors?: ThemeColorsCustomConfig
+}
 
-export type Breakpoints = ValueOf<Theme, 'breakpoints'>
-export type ThemeColorKey = NestedKeyOf<Theme['colors']>
+export type Breakpoints<TTheme extends RootTheme = RootTheme> = ValueOf<TTheme, 'breakpoints'>
+export type ThemeColorKey<TTheme extends RootTheme = RootTheme> = NestedKeyOf<TTheme['colors']>
 
-export type StyleTransformer<K extends ThemeKey, TVal> = (params: {
-  value?: TVal | undefined | null
-  theme: Theme
+export type StyleTransformer<TTheme extends RootTheme, K extends keyof TTheme, TVal> = (params: {
+  value: TVal | undefined | null
+  theme: TTheme
   themeKey?: K
 }) => TVal | undefined | null
 
 export type AtLeastOneResponsiveValue<
   Value,
-  B extends Breakpoints,
+  B extends Breakpoints<RootTheme>,
   R = { [Key in keyof B]: { [key in Key]: Value } },
 > = Partial<{
   [K in keyof B]: Value
@@ -90,18 +104,17 @@ export type ResponsiveValue<Value, B extends Breakpoints> =
   | Value
   | AtLeastOneResponsiveValue<Value, B>
 
-type PickEndsWith<T extends object, S extends string> = {
-  [K in keyof T as K extends `${S}${infer R}` ? K : never]: T[K]
-}
-// type BaseThemeKeys = Except<Theme, keyof KnownBaseTheme>
-export type SafeVariants = Except<Theme, keyof KnownBaseTheme> // PickEndsWith<Theme, `${string}Variants`>
-export type SafeVariantKey = StringKeyOf<SafeVariants>
-export type SafeVariant = ValueOf<Theme, SafeVariantKey>
+export type SafeVariants<TTheme extends RootTheme> = Except<TTheme, keyof KnownBaseTheme>
+export type SafeVariantKey<TTheme extends RootTheme> =
+  | keyof SafeVariants<TTheme>
+  | StringKeyOf<SafeVariants<TTheme>>
+export type SafeVariant<TTheme extends RootTheme> = ValueOf<TTheme, SafeVariantKey<TTheme>>
 
 export interface StyleFunctionContainer<
   TProps extends AnyProps,
+  TTheme extends RootTheme = RootTheme,
   P extends keyof TProps = keyof TProps,
-  K extends ThemeKey | SafeVariantKey = ThemeKey | SafeVariantKey,
+  K extends keyof TTheme | SafeVariantKey<TTheme> = keyof TTheme | SafeVariantKey<TTheme>,
 > {
   property: P
   themeKey: K | undefined
@@ -109,9 +122,13 @@ export interface StyleFunctionContainer<
   func: StyleFunction<TProps>
 }
 
-export type StyleFunction<TProps extends AnyProps = AnyProps, S extends keyof any = string> = (
+export type StyleFunction<
+  TProps extends AnyProps = AnyProps,
+  TTheme extends RootTheme = RootTheme,
+  S extends keyof any = string,
+> = (
   props: TProps,
-  context: { theme: Theme; dimensions: Dimensions | null },
+  context: { theme: TTheme; dimensions: Dimensions | null },
 ) => {
   [key in S]?: any
 }

@@ -12,9 +12,13 @@ const variant = createVariant({
   themeKey: 'cardVariants',
 })
 
-export const Card = createStyleComponent<BoxProps & VariantProps<'cardVariants'>>(
-  [...boxStyleFunctions, variant] as StyleFunctionContainer<
-    BoxProps & VariantProps<'cardVariants'>
-  >[],
-  View,
+type CardProps = BoxProps & VariantProps<'cardVariants'>
+const props = Object.assign(
+  {},
+  boxStyleFunctions,
+  createVariant({
+    themeKey: 'cardVariants',
+  }),
 )
+
+export const Card = createStyleComponent<CardProps>([...props], View)

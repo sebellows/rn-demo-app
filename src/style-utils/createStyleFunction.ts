@@ -1,13 +1,11 @@
 import { getThemeValue } from './utilities'
 import {
   Dimensions,
-  ResponsiveBaseTheme,
   StyleFunction,
   RNStyleProperty,
   StyleTransformer,
   AnyProps,
-  ThemeKey,
-  Theme,
+  RootTheme,
 } from './types'
 import { getResponsiveValue } from './utilities/getResponsiveValue'
 import { isString, isUndefined } from '../utils'
@@ -21,12 +19,13 @@ const getMemoizedMapHashKey = (
   return `${dimensions?.height}x${dimensions?.width}-${themeKey}-${property}-${value}`
 }
 
-const memoizedThemes: WeakMap<Theme, any> = new WeakMap()
+const memoizedThemes: WeakMap<RootTheme, any> = new WeakMap()
 
 const createStyleFunction = <
+  TTheme extends RootTheme = RootTheme,
   TProps extends AnyProps = AnyProps,
   P extends keyof TProps = keyof TProps,
-  K extends ThemeKey = ThemeKey,
+  K extends keyof TTheme = keyof TTheme,
   S extends RNStyleProperty = RNStyleProperty,
 >({
   property,
@@ -35,13 +34,13 @@ const createStyleFunction = <
   themeKey,
 }: {
   property: P
-  transform?: StyleTransformer<K, TProps[P]>
+  transform?: StyleTransformer<TTheme, K, TProps[P]>
   styleProperty?: S
   themeKey?: K
 }) => {
   const styleProp = styleProperty || property.toString()
 
-  const func: StyleFunction<TProps, S | P> = (props, { theme, dimensions }) => {
+  const func: StyleFunction<TProps, TTheme, S | P> = (props, { theme, dimensions }) => {
     if (memoizedThemes.get(theme) == null) {
       memoizedThemes.set(theme, {})
     }
@@ -130,7 +129,7 @@ const createStyleFunction = <
   }
 }
 
-function isResponsiveTheme(theme: Theme): theme is Theme {
+function isResponsiveTheme<TTheme extends RootTheme>(theme: TTheme): theme is TTheme {
   if (theme.breakpoints !== undefined) {
     return true
   }

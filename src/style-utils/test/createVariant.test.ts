@@ -1,8 +1,9 @@
+import { SetOptional } from 'type-fest'
+import { createTheme } from '../../theme'
 import { baseColors, colorModes, palette } from '../color'
 import { createVariant } from '../createVariant'
-import { Theme } from '../types'
 
-const theme: Theme = {
+const theme = createTheme('light', {
   colors: {
     ...baseColors,
     ...palette,
@@ -61,7 +62,10 @@ const theme: Theme = {
       height: 50,
     },
   },
-}
+})
+
+type Theme = typeof theme
+
 const dimensions = {
   width: 375,
   height: 667,
@@ -165,7 +169,7 @@ describe('createVariant', () => {
   })
 
   it('correctly creates textVariants without key in theme', () => {
-    const themeSubset = { ...theme }
+    const themeSubset = { ...theme } as SetOptional<Theme, 'textVariants'>
     delete themeSubset.textVariants
     const variant = createVariant({ themeKey: 'textVariants' })
     expect(variant.func({}, { theme: themeSubset, dimensions })).toStrictEqual({})

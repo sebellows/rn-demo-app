@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { PropsWithChildren } from 'react'
 import { View } from 'react-native'
 
 import { createStyleComponent } from './createStyleComponent'
-import { StyleFunctionContainer } from './types'
+import { RootTheme, StyleFunctionContainer } from './types'
 import {
   backgroundColor,
   backgroundColorShorthand,
@@ -26,19 +26,21 @@ import {
   spacingShorthand,
 } from './styleFunctions'
 
-type BaseBoxProps = BackgroundColorProps &
-  OpacityProps &
-  VisibleProps &
-  LayoutProps &
-  SpacingProps &
-  BorderProps &
-  ShadowProps &
-  PositionProps
+type BaseBoxProps<TTheme extends RootTheme> = BackgroundColorProps<TTheme> &
+  OpacityProps<TTheme> &
+  VisibleProps<TTheme> &
+  LayoutProps<TTheme> &
+  SpacingProps<TTheme> &
+  BorderProps<TTheme> &
+  ShadowProps<TTheme> &
+  PositionProps<TTheme>
 
-export type BoxProps<EnableShorthand extends boolean = true> = BaseBoxProps &
-  EnableShorthand extends true
-  ? BaseBoxProps & SpacingShorthandProps & BackgroundColorShorthandProps
-  : BaseBoxProps
+export type BoxProps<
+  TTheme extends RootTheme,
+  EnableShorthand extends boolean = true,
+> = BaseBoxProps<TTheme> & EnableShorthand extends true
+  ? BaseBoxProps<TTheme> & SpacingShorthandProps<TTheme> & BackgroundColorShorthandProps<TTheme>
+  : BaseBoxProps<TTheme>
 
 export const boxStyleFunctions = [
   backgroundColor,
@@ -54,14 +56,19 @@ export const boxStyleFunctions = [
 ]
 
 const createBox = <
-  Props = React.ComponentProps<typeof View> & { children?: React.ReactNode },
+  TTheme extends RootTheme,
+  Props = PropsWithChildren<React.ComponentProps<typeof View>>,
   EnableShorthand extends boolean = true,
 >(
   BaseComponent: React.ComponentType<any> = View,
 ) => {
   return createStyleComponent<
-    BoxProps<EnableShorthand> & Omit<Props, keyof BoxProps<EnableShorthand>>
-  >(boxStyleFunctions as StyleFunctionContainer<BoxProps<EnableShorthand>>[], BaseComponent)
+    BoxProps<TTheme, EnableShorthand> & Omit<Props, keyof BoxProps<TTheme, EnableShorthand>>,
+    TTheme
+  >(
+    boxStyleFunctions as StyleFunctionContainer<BoxProps<TTheme, EnableShorthand>, TTheme>[],
+    BaseComponent,
+  )
 }
 
 export { createBox }

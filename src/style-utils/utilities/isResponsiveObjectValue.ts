@@ -1,10 +1,10 @@
-import { AtLeastOneResponsiveValue, Breakpoints, ResponsiveValue, Theme } from '../types'
+import { AtLeastOneResponsiveValue, Breakpoints, ResponsiveValue, RootTheme } from '../types'
 
 import { getKeys } from '@/utils'
 
-export const isResponsiveObjectValue = <TVal>(
+export const isResponsiveObjectValue = <TTheme extends RootTheme, TVal>(
   val: ResponsiveValue<TVal, Breakpoints>,
-  theme: Theme,
+  theme: TTheme,
 ): val is AtLeastOneResponsiveValue<TVal, Breakpoints> => {
   if (!val || typeof val !== 'object') return false
 

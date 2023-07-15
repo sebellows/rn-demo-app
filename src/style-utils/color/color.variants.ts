@@ -1,4 +1,4 @@
-import { ColorAccents, ColorVariants } from './color.types'
+import { ColorAccents, ColorSchemes, ColorVariants } from './color.types'
 import { palette } from './palette'
 
 const neutral = palette.gray
@@ -26,18 +26,11 @@ const colorVariants: ColorVariants = {
   inverted,
 }
 
-export const ColorModeOptions = ['light', 'dark'] as const
-export type ColorMode = (typeof ColorModeOptions)[number]
-export type ColorModes = {
-  light: ColorVariants
-  dark: ColorVariants
-}
-
 const invertedSchema = {
   neutral: inverted,
   inverted: neutral,
 } as Pick<ColorVariants, 'neutral' | 'inverted'>
-export const colorModes: ColorModes = {
+export const colorModes: ColorSchemes = {
   light: colorVariants,
   dark: {
     ...colorVariants,

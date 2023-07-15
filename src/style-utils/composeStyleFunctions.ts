@@ -1,13 +1,16 @@
 import { StyleSheet, ViewStyle } from 'react-native'
 
-import { StyleFunctionContainer, Dimensions, RNStyle, StyleFunction, Theme } from './types'
+import { StyleFunctionContainer, Dimensions, RNStyle, StyleFunction, RootTheme } from './types'
 import { AllProps } from './styleFunctions'
 
-const composeStyleFunctions = <TProps extends AllProps = AllProps>(
-  styleFunctions: (StyleFunctionContainer<TProps> | StyleFunctionContainer<TProps>[])[],
+const composeStyleFunctions = <TTheme extends RootTheme, TProps extends AllProps<TTheme>>(
+  styleFunctions: (
+    | StyleFunctionContainer<TProps, TTheme>
+    | StyleFunctionContainer<TProps, TTheme>[]
+  )[],
 ) => {
   const flattenedStyleFunctions = styleFunctions.reduce(
-    (acc: StyleFunctionContainer<TProps>[], item) => {
+    (acc: StyleFunctionContainer<TProps, TTheme>[], item) => {
       return acc.concat(item)
     },
     [],
@@ -23,7 +26,7 @@ const composeStyleFunctions = <TProps extends AllProps = AllProps>(
 
   const funcsMap = flattenedStyleFunctions.reduce(
     (acc, each) => ({ [each.property]: each.func, ...acc }),
-    {} as { [key in keyof TProps]: StyleFunction<TProps, string> },
+    {} as { [key in keyof TProps]: StyleFunction<TProps, TTheme, string> },
   )
 
   // TInputProps is a superset of TProps since TProps are only the Style Props
@@ -33,7 +36,7 @@ const composeStyleFunctions = <TProps extends AllProps = AllProps>(
       theme,
       dimensions,
     }: {
-      theme: Theme
+      theme: TTheme
       dimensions: Dimensions | null
     },
   ): RNStyle => {
@@ -43,7 +46,7 @@ const composeStyleFunctions = <TProps extends AllProps = AllProps>(
     // eslint-disable-next-line guard-for-in
     for (const key in props) {
       const mappedProps = funcsMap[key](props, options)
-      // eslint-disable-next-line guard-for-in
+
       for (const mappedKey in mappedProps) {
         styles[mappedKey as keyof ViewStyle] = mappedProps[mappedKey]
       }

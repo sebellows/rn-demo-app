@@ -2,19 +2,21 @@ import React from 'react'
 import { create as render } from 'react-test-renderer'
 import { Text as RNText } from 'react-native'
 
-import createTheme from '../createTheme'
-import createText from '../createText'
-import { ThemeProvider } from '../theme.context'
+import { createTheme, ThemeProvider } from '../../theme'
+
+import { createText } from '../createText'
 
 const palette = {
   black: '#000000',
   grey: '#808080',
 }
 
-const theme = createTheme({
+const theme = createTheme('light', {
   colors: {
-    black: palette.black,
-    grey: palette.grey,
+    variables: {
+      black: palette.black,
+      grey: palette.grey,
+    },
   },
   spacing: {
     s: 4,
@@ -37,6 +39,7 @@ const theme = createTheme({
 })
 
 type Theme = typeof theme
+// const textVariants = theme.textVariants.
 
 const Text = createText<Theme>()
 
@@ -68,7 +71,7 @@ describe('createText', () => {
   it('uses a spacing value from the theme', () => {
     const { root } = render(
       <ThemeProvider theme={theme}>
-        <Text padding="s">Some text</Text>
+        <Text padding="2">Some text</Text>
       </ThemeProvider>,
     )
 

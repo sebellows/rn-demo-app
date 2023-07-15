@@ -2,7 +2,7 @@ import React from 'react'
 import { View } from 'react-native'
 import { create as render } from 'react-test-renderer'
 
-import { ThemeProvider } from '../theme.context'
+import { ThemeProvider } from '@/theme/theme.context'
 
 import { Button } from './TestButton'
 import { Container, theme } from './TestContainer'

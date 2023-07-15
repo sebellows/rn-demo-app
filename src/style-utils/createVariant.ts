@@ -4,9 +4,9 @@ import {
   ResponsiveValue,
   StyleFunctionContainer,
   StyleFunction,
-  Theme,
-  ThemeKey,
   SafeVariantKey,
+  RootTheme,
+  SafeVariants,
 } from './types'
 import { createStyleFunction } from './createStyleFunction'
 import { all, AllProps } from './styleFunctions'
@@ -16,22 +16,27 @@ const allStyleFunctions = composeStyleFunctions(all)
 
 // With Custom Prop Name
 function createVariant<
-  K extends SafeVariantKey = SafeVariantKey,
+  TTheme extends RootTheme,
+  K extends SafeVariantKey<TTheme> = SafeVariantKey<TTheme>,
   P extends keyof any = keyof any,
 >(params: {
   property: P
   themeKey: K
-  defaults?: AllProps
-}): StyleFunctionContainer<VariantProps<K, P>, P, K>
+  defaults?: AllProps<TTheme>
+}): StyleFunctionContainer<VariantProps<TTheme, K, P>, TTheme, P, K>
 // Without Custom Prop Name
-function createVariant<K extends SafeVariantKey = SafeVariantKey>(params: {
-  themeKey: K
-  defaults?: AllProps
-}): StyleFunctionContainer<VariantProps<K>, 'variant', K>
 function createVariant<
-  K extends SafeVariantKey = SafeVariantKey,
+  TTheme extends RootTheme,
+  K extends SafeVariantKey<TTheme> = SafeVariantKey<TTheme>,
+>(params: {
+  themeKey: K
+  defaults?: AllProps<TTheme>
+}): StyleFunctionContainer<VariantProps<TTheme, K>, TTheme, 'variant', K>
+function createVariant<
+  TTheme extends RootTheme,
+  K extends keyof SafeVariants<TTheme> = keyof SafeVariants<TTheme>,
   P extends keyof any = keyof any,
-  TProps extends VariantProps<K, P> = VariantProps<K, P>,
+  TProps extends VariantProps<TTheme, K, P> = VariantProps<TTheme, K, P>,
 >({
   property = 'variant' as P,
   themeKey,
@@ -39,17 +44,17 @@ function createVariant<
 }: {
   property?: P
   themeKey: K
-  defaults?: AllProps
+  defaults?: AllProps<TTheme>
 }) {
-  const styleFunction = createStyleFunction<TProps, P, K>({
+  const styleFunction = createStyleFunction<TTheme, TProps, P, K>({
     property,
     themeKey,
   })
-  const func: StyleFunction<TProps> = (props, { theme, dimensions }) => {
+  const func: StyleFunction<TProps, TTheme> = (props, { theme, dimensions }) => {
     const expandedProps = styleFunction.func(props, { theme, dimensions })[property]
 
     const themeVariant = theme[themeKey]
-    const variantDefaults = themeVariant ? (themeVariant.defaults as Partial<AllProps>) : {}
+    const variantDefaults = themeVariant ? (themeVariant.defaults as Partial<AllProps<TTheme>>) : {}
 
     if (!expandedProps && !defaults && !variantDefaults) return {}
 
@@ -72,10 +77,11 @@ function createVariant<
 }
 
 export type VariantProps<
-  K extends SafeVariantKey = SafeVariantKey,
+  TTheme extends RootTheme,
+  K extends SafeVariantKey<TTheme> = SafeVariantKey<TTheme>,
   Property extends keyof any = 'variant',
 > = {
-  [key in Property]?: ResponsiveValue<keyof Omit<Theme[K], 'defaults'>, Theme['breakpoints']>
+  [key in Property]?: ResponsiveValue<keyof Omit<TTheme[K], 'defaults'>, TTheme['breakpoints']>
 }
 
 export { createVariant }

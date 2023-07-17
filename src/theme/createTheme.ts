@@ -2,19 +2,19 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 
 import {
+  AppTheme,
   ColorMode,
   ColorVariables,
   CustomTheme,
   RootTheme,
   ThemeColors,
-  ThemeColorsCustomConfig,
   baseColors,
 } from '../style-utils'
 import { palette } from '../style-utils/color/palette'
 import { colorModes } from '../style-utils/color/color.variants'
 import { getValidColorMode } from '../style-utils/color/color.validators'
-import { mergeDeep } from '../utils'
-import { MergeDeep } from 'type-fest'
+import { isPlainObject } from '../utils'
+import { SetOptional } from 'type-fest'
 
 const colorVariables = (colorMode: ColorMode, variables: ColorVariables = {}): ColorVariables => {
   const mode = getValidColorMode(colorMode)
@@ -67,9 +67,12 @@ const colorVariables = (colorMode: ColorMode, variables: ColorVariables = {}): C
   }
 }
 
-const resolveColorScheme = (mode: ColorMode, colors: ThemeColorsCustomConfig = {}): ThemeColors => {
-  const { variables } = colors
-  const colorVars = colorVariables(mode, variables)
+const resolveColorScheme = (mode: ColorMode, colors: CustomTheme['colors']): ThemeColors => {
+  let colorVars: ColorVariables = {}
+
+  if (colors && isPlainObject(colors?.variables)) {
+    colorVars = colorVariables(mode, colors.variables)
+  }
 
   return {
     ...colorVars,
@@ -78,41 +81,16 @@ const resolveColorScheme = (mode: ColorMode, colors: ThemeColorsCustomConfig = {
   } as ThemeColors
 }
 
-const getSpacing = (spacing: RootTheme['spacing']) => ({
-  '0': 0,
-  px: 1,
-  '0.5': 2,
-  '1': 4,
-  '1.5': 6,
-  '2': 8,
-  '2.5': 10,
-  '3': 12,
-  '4': 16,
-  '5': 20,
-  '6': 24,
-  '7': 28,
-  '8': 32,
-  '9': 36,
-  '10': 40,
-  '11': 44,
-  '12': 48,
-  '13': 56,
-  '14': 64,
-  ...spacing,
-})
-
-const customThemeDefault = <TTheme = {}>(): TTheme & CustomTheme =>
-  ({
-    breakpoints: {},
-    spacing: {},
-    textVariants: { defaults: {}, title: { fontSize: 35 } },
-  }) as unknown as TTheme & CustomTheme
+const customThemeDefault = (customTheme: SetOptional<CustomTheme, 'colors'> = {}): CustomTheme => ({
+  breakpoints: {},
+  colors: { variables: {} },
+  spacing: {},
+  ...customTheme,
+  // textVariants: { defaults: {}, title: { fontSize: 35 } },
+}) // as unknown as CustomTheme
 
 // Enforces proper shape for theme without throwing away the user specific values
-export const createTheme = <TTheme extends CustomTheme = CustomTheme>(
-  mode: ColorMode = 'light',
-  customTheme = customThemeDefault<TTheme>(),
-) => {
+export const createTheme = (mode: ColorMode = 'light', customTheme = {}) => {
   const {
     breakpoints = {},
     colors: customColors,
@@ -121,16 +99,17 @@ export const createTheme = <TTheme extends CustomTheme = CustomTheme>(
     spacing = {},
     textVariants = {},
     ..._customTheme
-  } = customTheme
+  } = customThemeDefault(customTheme)
   const colors = resolveColorScheme(mode, customColors)
 
-  const baseTheme = {
+  const baseTheme: RootTheme = {
     mode,
     breakpoints: {
       phone: 0,
       tablet: 768,
       ...breakpoints,
     },
+    colors,
     spacing: {
       '0': 0,
       px: 1,
@@ -153,7 +132,6 @@ export const createTheme = <TTheme extends CustomTheme = CustomTheme>(
       '14': 64,
       ...spacing,
     },
-    colors,
     textVariants: {
       defaults: {
         color: colors.bodyFg,
@@ -246,9 +224,7 @@ export const createTheme = <TTheme extends CustomTheme = CustomTheme>(
     },
   }
 
-  const _theme = { ...baseTheme, ..._customTheme }
+  const theme = { ...baseTheme, ..._customTheme } as AppTheme
 
-  return _theme
+  return theme
 }
-
-// export type Theme = ReturnType<typeof createTheme>

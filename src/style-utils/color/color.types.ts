@@ -64,5 +64,3 @@ export type ColorSchemes = {
   light: ColorVariants
   dark: ColorVariants
 }
-
-export type ColorVariables = Record<string, string>

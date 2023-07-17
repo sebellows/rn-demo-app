@@ -1,7 +1,16 @@
 import { ImageStyle, TextStyle, ViewStyle, StyleProp } from 'react-native'
-import { Except, StringKeyOf, ValueOf } from 'type-fest'
+import {
+  ConditionalExcept,
+  Except,
+  MergeDeep,
+  OmitIndexSignature,
+  PickIndexSignature,
+  StringKeyOf,
+  ValueOf,
+} from 'type-fest'
 
-import { ColorMode, ColorVariables } from './color/color.types'
+import { ColorMode, ColorPalette, ColorVariants } from './color/color.types'
+import { AnyObj } from '../types'
 
 type NestedKeyOf<ObjectType extends object> = {
   [Key in keyof ObjectType & (string | number)]: ObjectType[Key] extends object
@@ -9,16 +18,7 @@ type NestedKeyOf<ObjectType extends object> = {
     : `${Key}`
 }[keyof ObjectType & (string | number)]
 
-export type AnyProps = { [key: string]: any }
-
 export type Breakpoint = number | Dimensions
-
-// interface VariantsWithDefaults {
-//   [key: `${string}Variants`]: {
-//     defaults: AnyProps
-//     [key: string]: any
-//   }
-// }
 
 export interface Dimensions {
   width: number
@@ -35,17 +35,61 @@ export type RNStyleProperty = keyof ViewStyle | keyof TextStyle | keyof ImageSty
 
 export type PropValue = string | number | undefined | null
 
-type ThemeColorVariables = {
-  variables?: ColorVariables
+export type ColorVariables = Record<string, PropValue>
+
+/**
+ * For addition of a custom theme, individual color definitions can be set
+ * in a key-value map and assigned to the `variables` field.
+ */
+// type CustomColorVariables = {
+//   variables?: ColorVariables
+// }
+// export type AllColors = ColorVariables & ColorPalette & ColorVariants
+// type ThemeColorConfig = Partial<AllColors>
+// {
+//   [key: string]: string | Record<string, string>
+// }
+// export type ThemeColorsCustomConfig = CustomColorVariables & ThemeColorConfig
+type GetConcrete<T extends AnyObj> = Record<keyof T, ValueOf<T, keyof T>>
+type TestObj = {
+  red: string
+  blue: string
+  [key: string]: string
 }
-type ThemeColorConfig = {
-  [key: string]: string | Record<string, string>
+export type TestObjWithoutIndexSigs = OmitIndexSignature<TestObj>
+
+export type ThemeColors = GetConcrete<ColorVariables> & ColorPalette & ColorVariants
+// export type ThemeColors<TColors extends ThemeColorConfig = ThemeColorConfig> = TColors &
+//   Omit<ThemeColorConfig, keyof TColors>
+
+/**
+ * This is the shape of the field key for any component variant styles.
+ */
+type ThemeVariantsTypeKey = `${string}Variants`
+
+type ThemeVariantsRecordKey = Exclude<string, 'defaults'>
+type ThemeVariantsRecord = { [key: ThemeVariantsRecordKey]: RNStyleBlock }
+
+type ThemeVariants = {
+  defaults: RNStyleBlock
+} & ThemeVariantsRecord
+
+/**
+ * i.e., `textVariants`, `cardVariants`, etc.
+ * @example
+ * textVariants: {
+ *   bodyText: {
+ *     fontSize: 15,
+ *     lineHeight: 21
+ *   }
+ * }
+ */
+export interface WithVariants {
+  [key: ThemeVariantsTypeKey]: ThemeVariants
 }
-export type ThemeColorsCustomConfig = ThemeColorVariables & ThemeColorConfig
-export type ThemeColors<TColors extends ThemeColorConfig = ThemeColorConfig> = TColors &
-  Omit<ThemeColorConfig, keyof TColors>
 
 interface KnownBaseTheme {
+  mode?: ColorMode
   breakpoints: Record<string, Breakpoint>
   spacing: Record<string, number | string>
   zIndices?: Record<string, number>
@@ -53,36 +97,52 @@ interface KnownBaseTheme {
 }
 
 export interface BaseTheme extends KnownBaseTheme {
-  mode?: ColorMode
   [key: string]: any
 }
 
-type RNStyleBlock = Record<RNStyleProperty, PropValue>
-export interface WithVariants {
-  // breakpoints: Record<string, Breakpoint>
-  // [key: `${string}Variants`]: VariantsWithDefaults
-  [key: `${string}Variants`]: {
-    defaults: RNStyleBlock
-    [key: string]: RNStyleBlock
-  }
-}
+export type RNStyleBlock = Partial<
+  Record<RNStyleProperty, PropValue | ResponsiveValue<PropValue, Breakpoints>>
+>
 
+// export interface RootTheme<TColors extends ThemeColorConfig = ThemeColorConfig>
+//   extends BaseTheme,
+//     WithVariants {
+//   colors: TColors & Omit<ThemeColorConfig, keyof TColors>
+// }
 export interface RootTheme extends BaseTheme, WithVariants {
   colors: ThemeColors
-  // textVariants: VariantsWithDefaults
-  // cardVariants: VariantsWithDefaults
-  // inputVariants?: VariantsWithDefaults
-  // buttonVariants?: VariantsWithDefaults
-  // layoutVariants: VariantsWithDefaults
-  // [key: `${string}Variants`]: VariantsWithDefaults
-  // [key: string]: any
 }
 
-export interface CustomTheme extends Omit<Partial<RootTheme>, 'colors'> {
-  colors?: ThemeColorsCustomConfig
+export interface CustomTheme extends Except<Partial<RootTheme>, 'colors'> {
+  colors: Partial<ColorPalette> & Partial<ColorVariants> & { variables: ColorVariables } //ThemeColorsCustomConfig
+}
+
+type OnlyColorVariables = PickIndexSignature<ThemeColors>
+type ExceptColorVariables = OmitIndexSignature<ThemeColors>
+type MergedColors = CustomTheme['variables'] &
+  Except<OnlyColorVariables, StringKeyOf<CustomTheme['variables']>> &
+  ExceptColorVariables
+
+export interface AppTheme
+  extends MergeDeep<
+    Except<RootTheme, 'colors'>,
+    ConditionalExcept<Except<CustomTheme, 'colors'>, undefined>
+  > {
+  colors: MergedColors
 }
 
 export type Breakpoints<TTheme extends RootTheme = RootTheme> = ValueOf<TTheme, 'breakpoints'>
+
+/**
+ * We can use dot-notation to access the nested values for colors defined within our palette
+ * and color variants.
+ * @example
+ * const theme = useTheme()
+ * const mediumRed = theme.colors.red['500']
+ *
+ * OR, for easier access, use the `get` utility function:
+ * const mediumRed = get(theme, 'colors.red.500')
+ */
 export type ThemeColorKey<TTheme extends RootTheme = RootTheme> = NestedKeyOf<TTheme['colors']>
 
 export type StyleTransformer<TTheme extends RootTheme, K extends keyof TTheme, TVal> = (params: {
@@ -111,7 +171,7 @@ export type SafeVariantKey<TTheme extends RootTheme> =
 export type SafeVariant<TTheme extends RootTheme> = ValueOf<TTheme, SafeVariantKey<TTheme>>
 
 export interface StyleFunctionContainer<
-  TProps extends AnyProps,
+  TProps extends AnyObj,
   TTheme extends RootTheme = RootTheme,
   P extends keyof TProps = keyof TProps,
   K extends keyof TTheme | SafeVariantKey<TTheme> = keyof TTheme | SafeVariantKey<TTheme>,
@@ -123,7 +183,7 @@ export interface StyleFunctionContainer<
 }
 
 export type StyleFunction<
-  TProps extends AnyProps = AnyProps,
+  TProps extends AnyObj = AnyObj,
   TTheme extends RootTheme = RootTheme,
   S extends keyof any = string,
 > = (

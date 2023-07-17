@@ -1,7 +1,7 @@
 import { Constructor, ValueOf } from 'type-fest'
 
 import { hasOwn } from './common'
-import { AsyncCallback, AsyncFunction, Callback } from '@/types'
+import { AnyObj, AsyncCallback, AsyncFunction, Callback } from '@/types'
 
 /**
  * @internal
@@ -91,12 +91,21 @@ export function is<T extends keyof TypeConstructorMap>(
  * Check if a value is a primitive type.
  *
  * @param {*} value - Any type of value
- * @param {string} type - The type to check the value against
  * @returns {boolean}
  */
 export function isPrimitive<T>(value: T): value is T {
   const type = typeOf(value)
   return ['boolean', 'null', 'number', 'string', 'symbol', 'undefined'].includes(type)
+}
+
+/**
+ * Check if a value is a primitive type.
+ *
+ * @param {*} value - Any type of value
+ * @returns {boolean}
+ */
+export function isNonPrimitive<T>(value: T): value is T {
+  return !isPrimitive(value) && !isFunction(value) && !isConstructor(value)
 }
 
 export function isArrayBuffer(value: unknown): value is ArrayBuffer {
@@ -142,6 +151,21 @@ export function isError(value: unknown): value is Error {
  */
 export function isNativeObject(value: unknown) {
   return !Object.is(_protoToString, value?.toString)
+}
+
+type ImportModule = { default: unknown } & AnyObj
+export function isModule(value: unknown): value is ImportModule {
+  return isPlainObject(value) && typeOf(value) === 'module' && value?.default
+}
+
+/**
+ * Verify that a value extends/conforms to a TS Record type of `Record<PropertyKey, unknown>`.
+ */
+export function isRecord(value: unknown): value is Record<PropertyKey, unknown> {
+  return (
+    (isPlainObject(value) || isModule(value)) &&
+    hasOwn(value?.constructor?.prototype, 'isPrototypeOf')
+  )
 }
 
 /**
@@ -269,7 +293,7 @@ export function isSymbol(value: unknown): value is symbol {
   return is(value, 'symbol')
 }
 
-export const isConstructor = <T = any>(value: unknown): value is Constructor<T> => {
+export function isConstructor<T = any>(value: unknown): value is Constructor<T> {
   return isFunction(value) && hasOwn(value, 'name') && /[A-Z]/.test(value.name.charAt(0))
 }
 

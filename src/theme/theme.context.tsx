@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 
-import { RootTheme } from '@/style-utils/types'
+import { AppTheme } from '@/style-utils/types'
 
 export const ThemeContext = React.createContext({
   breakpoints: {},
@@ -11,7 +11,7 @@ export const ThemeProvider = ({
   theme,
   children,
 }: PropsWithChildren<{
-  theme: RootTheme
+  theme: AppTheme
 }>) => {
   return <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
 }

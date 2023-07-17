@@ -3,7 +3,10 @@ import { StyleSheet, ViewStyle } from 'react-native'
 import { StyleFunctionContainer, Dimensions, RNStyle, StyleFunction, RootTheme } from './types'
 import { AllProps } from './styleFunctions'
 
-const composeStyleFunctions = <TTheme extends RootTheme, TProps extends AllProps<TTheme>>(
+const composeStyleFunctions = <
+  TTheme extends RootTheme,
+  TProps extends AllProps<TTheme> = AllProps<TTheme>,
+>(
   styleFunctions: (
     | StyleFunctionContainer<TProps, TTheme>
     | StyleFunctionContainer<TProps, TTheme>[]

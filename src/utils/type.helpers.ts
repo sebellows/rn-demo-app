@@ -1,5 +1,14 @@
 import { AnyObj } from '../types'
 
+function yesItCanBeUsedToIndexTypeAndYouKnowItTypescript<T extends AnyObj>(
+  obj: T,
+  key: string | keyof T,
+) {
+  return obj[key]
+}
+/** Alias to the statement masquerading as a function name above. */
+export const getKey = yesItCanBeUsedToIndexTypeAndYouKnowItTypescript
+
 /**
  * `Object.keys()` defines all keys as strings which can lead to TS issues with
  * typed objects. This helper will coerce the type of the keys to avoid warnings.

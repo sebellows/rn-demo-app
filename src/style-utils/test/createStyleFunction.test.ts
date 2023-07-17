@@ -1,7 +1,8 @@
+import { createTheme } from '../../theme'
 import { createStyleFunction } from '../createStyleFunction'
 import { RNStyle } from '../types'
 
-const theme = {
+const theme = createTheme('light', {
   colors: {},
   spacing: {},
   opacities: {
@@ -13,7 +14,7 @@ const theme = {
     phone: 0,
     tablet: 376,
   },
-}
+})
 
 const dimensions = {
   width: 375,

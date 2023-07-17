@@ -1,13 +1,15 @@
 import React, { PropsWithChildren } from 'react'
 import { View } from 'react-native'
 
+import { AnyObj } from '../types'
+
 import { composeStyleFunctions } from './composeStyleFunctions'
-import { AnyProps, RootTheme, StyleFunctionContainer } from './types'
+import { RootTheme, StyleFunctionContainer } from './types'
 import { useStyle } from './hooks/useStyle'
 
 export type StyledComponentProps<
   C extends React.ComponentType<any> = typeof View,
-  Props extends AnyProps = AnyProps,
+  Props extends AnyObj = AnyObj,
 > = React.ComponentPropsWithRef<C> &
   Omit<PropsWithChildren<Props>, keyof React.ComponentPropsWithRef<C>>
 

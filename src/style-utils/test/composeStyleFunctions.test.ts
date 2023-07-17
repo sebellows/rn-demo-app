@@ -1,15 +1,18 @@
 import { createStyleFunction } from '../createStyleFunction'
 import { composeStyleFunctions } from '../composeStyleFunctions'
+import { createTheme } from '../../theme'
 
-const theme = {
+const theme = createTheme('light', {
   colors: {
-    black: '#111111',
+    variables: { black: '#111111' },
   },
   spacing: {
     m: 16,
   },
   breakpoints: {},
-}
+})
+
+type Theme = typeof theme
 
 const dimensions = {
   width: 375,
@@ -23,7 +26,7 @@ describe('composeStyleFunctions', () => {
   ]
 
   it('composes multiple styleFunctions into one', () => {
-    const { buildStyle } = composeStyleFunctions(styleFunctions)
+    const { buildStyle } = composeStyleFunctions<Theme>(styleFunctions)
     expect(buildStyle({ color: 'black', margin: 'm' }, { theme, dimensions })).toStrictEqual({
       color: '#111111',
       margin: 16,

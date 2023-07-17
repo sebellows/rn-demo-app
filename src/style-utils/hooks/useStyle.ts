@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
 import { StyleProp, useWindowDimensions } from 'react-native'
 
-import { Theme, RNStyle, Dimensions, AnyProps } from '../types'
+import { RootTheme, RNStyle, Dimensions } from '../types'
 
 import { useTheme } from '@/theme/useTheme'
+import { AnyObj } from '../../types'
 
 const filterStyleProps = <TStyleProps, TProps extends { [key: string]: unknown } & TStyleProps>(
   componentProps: TProps,
@@ -29,7 +30,8 @@ const filterStyleProps = <TStyleProps, TProps extends { [key: string]: unknown }
 }
 
 const useStyle = <
-  TStyleProps extends AnyProps,
+  TTheme extends RootTheme,
+  TStyleProps extends AnyObj,
   TProps extends TStyleProps & { style?: StyleProp<RNStyle> },
 >(
   composedStyleFunction: {
@@ -39,7 +41,7 @@ const useStyle = <
         theme,
         dimensions,
       }: {
-        theme: Theme
+        theme: TTheme
         dimensions: Dimensions | null
       },
     ) => RNStyle
@@ -50,7 +52,7 @@ const useStyle = <
 ) => {
   const theme = useTheme()
 
-  // Theme should not change between renders, so we can disable rules-of-hooks
+  // RootTheme should not change between renders, so we can disable rules-of-hooks
   // We want to avoid calling useWindowDimensions if breakpoints are not defined
   // as this hook is called extremely often and incurs some performance hit.
   const dimensions = theme.breakpoints

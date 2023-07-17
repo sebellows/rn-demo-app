@@ -1,14 +1,9 @@
-import { getThemeValue } from './utilities'
-import {
-  Dimensions,
-  StyleFunction,
-  RNStyleProperty,
-  StyleTransformer,
-  AnyProps,
-  RootTheme,
-} from './types'
-import { getResponsiveValue } from './utilities/getResponsiveValue'
+import { AnyObj } from '../types'
 import { isString, isUndefined } from '../utils'
+
+import { getThemeValue } from './utilities'
+import { Dimensions, StyleFunction, RNStyleProperty, StyleTransformer, RootTheme } from './types'
+import { getResponsiveValue } from './utilities/getResponsiveValue'
 
 const getMemoizedMapHashKey = (
   dimensions: Dimensions | null,
@@ -23,7 +18,7 @@ const memoizedThemes: WeakMap<RootTheme, any> = new WeakMap()
 
 const createStyleFunction = <
   TTheme extends RootTheme = RootTheme,
-  TProps extends AnyProps = AnyProps,
+  TProps extends AnyObj = AnyObj,
   P extends keyof TProps = keyof TProps,
   K extends keyof TTheme = keyof TTheme,
   S extends RNStyleProperty = RNStyleProperty,

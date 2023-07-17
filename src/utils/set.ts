@@ -1,6 +1,6 @@
+import { AnyObj } from '../types'
 import {
   _protoToString,
-  isBoolean,
   isNil,
   isNumber,
   isObject,
@@ -29,9 +29,9 @@ const plainPropRE = /^\w*$/
 const propNameRE =
   /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g
 
-/** Converts `value` to a string key if it's not a string or symbol. */
-function toKey(value: string | Symbol): string | Symbol {
-  if (isString(value) || isSymbol(value)) {
+/** Converts `value` to a string key if it's not a string or number. */
+function toKey(value: string | number): string | number {
+  if (isString(value) || isNumber(value)) {
     return value
   }
   // eslint-disable-next-line eqeqeq
@@ -75,7 +75,7 @@ const stringToPath = memoize((str: string): string[] => {
  * toPath('a[0].b.c'); // => ['a', '0', 'b', 'c']
  * ```
  */
-export function toPath(value: string | Symbol | (string | Symbol)[]): (string | Symbol)[] {
+export function toPath(value: string | number | (string | number)[]): (string | number)[] {
   if (Array.isArray(value)) {
     return value.map(toKey)
   }
@@ -98,7 +98,7 @@ function castPath<T extends Object>(value: any, obj: T): string[] {
  */
 export function set<T>(
   obj: T,
-  path: string | Symbol | (string | Symbol)[],
+  path: string | number | (string | number)[],
   value: any,
   customizer?: Function,
 ): T {
@@ -107,7 +107,7 @@ export function set<T>(
   const paths = castPath(path, obj)
 
   let i = -1
-  let nested: Record<string, any> = obj
+  let nested: AnyObj = obj
 
   while (!isNil(nested) && ++i < paths.length) {
     let key = toKey(String(paths[i])) as keyof typeof nested

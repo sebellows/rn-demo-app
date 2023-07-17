@@ -9,14 +9,11 @@ export interface Type<T = any> extends Function {
   new (...args: any[]): T
 }
 
-// type DictOptions = { excludeSymbolKeys?: boolean }
-// type DictKeys<Options extends DictOptions> = Options['excludeSymbolKeys'] extends false
-//   ? PropertyKey
-//   : 'string' | 'number'
-// export type Dict<
-//   Options extends DictOptions = { excludeSymbolKeys: false },
-//   Key = DictKeys<Options>,
-// > = { [K in keyof Key]: unknown }
+export type DeepKeys<T> = T extends object
+  ? {
+      [K in keyof T]-?: K extends string | number ? `${K}` | `${K}.${DeepKeys<T[K]>}` : never
+    }[keyof T]
+  : never
 
 export type NestedKeyOf<ObjectType extends object> = {
   [Key in keyof ObjectType & (string | number)]: ObjectType[Key] extends object
@@ -25,6 +22,8 @@ export type NestedKeyOf<ObjectType extends object> = {
 }[keyof ObjectType & (string | number)]
 
 export type AnyObj = { [key: string]: any }
+
+export type RecordType = Record<PropertyKey, unknown>
 
 export type AsyncFunction = (...arguments_: any[]) => Promise<unknown>
 

@@ -1,7 +1,7 @@
-import { createStyleComponent, createVariant } from '../style-utils'
+import { createRestyleComponent, createVariant } from '@shopify/restyle'
 
 const variant = createVariant({
   themeKey: 'cardVariants',
 })
 
-export const Card = createStyleComponent([variant])
+export const Card = createRestyleComponent([variant])

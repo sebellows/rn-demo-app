@@ -1,3 +1,3 @@
-import { createBox } from "../style-utils"
+import { createBox } from '@shopify/restyle'
 
 export const Box = createBox()

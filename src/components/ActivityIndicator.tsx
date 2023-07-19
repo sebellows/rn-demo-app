@@ -15,7 +15,7 @@ import {
   composeStyleFunctions,
   layout,
   useStyle,
-} from '../style-utils'
+} from '@/theme'
 
 type StyleProps = AnimationProps<Theme> & ColorProps<Theme> & LayoutProps<Theme>
 

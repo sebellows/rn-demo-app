@@ -1,3 +1,5 @@
-import { createText } from "../style-utils"
+import { createText } from '@shopify/restyle'
 
-export const Text = createText()
+import { Theme } from '../theme'
+
+export const Text = createText<Theme>()

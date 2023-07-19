@@ -1,21 +1,11 @@
-import { StatusBar } from 'expo-status-bar'
-import { Text } from 'react-native'
-import { useMemo, useState } from 'react'
+import 'react-native-gesture-handler'
 
-import { createTheme, ThemeProvider } from './src/theme'
-import { Card } from './src/components'
+import { Assets } from '@react-navigation/elements'
+import { registerRootComponent } from 'expo'
+import { Asset } from 'expo-asset'
 
-export default function App() {
-  const [darkMode, toggleDarkMode] = useState(false)
+import { App } from './src/index'
 
-  const theme = useMemo(() => createTheme(darkMode ? 'dark' : 'light'), [darkMode])
+Asset.loadAsync(Assets)
 
-  return (
-    <ThemeProvider theme={theme}>
-      <Card variant="base">
-        <Text>Open up App.tsx to start working on your app!</Text>
-        <StatusBar style="auto" />
-      </Card>
-    </ThemeProvider>
-  )
-}
+registerRootComponent(App)

@@ -216,15 +216,15 @@ export function isAsyncIterable<T>(value: unknown): value is AsyncIterable<T> {
   )
 }
 
-export function isEmpty<O extends Object | undefined>(value: O) {
+export function isEmpty<T>(value: T) {
   if (isNil(value)) return true
 
   if (isPlainObject(value)) {
-    return !!Object.keys(value).length
+    return Object.keys(value).length === 0
   } else if (hasOwn(value, 'length')) {
-    return !!(value as { length: number }).length
-  } else if (hasOwn(value, 'size')) {
-    return !!(value as { size: number }).size
+    return (value as { length: number }).length === 0
+  } else if (isMap(value) || isSet(value)) {
+    return value.size === 0
   }
 
   return false

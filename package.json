@@ -12,15 +12,23 @@
     "type-check": "tsc -b"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "1.17.11",
+    "@react-native-masked-view/masked-view": "0.2.8",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/stack": "^6.3.17",
     "axios": "^1.4.0",
-    "expo": "~48.0.18",
+    "expo-blur": "~12.2.2",
+    "expo-linking": "~4.0.1",
     "expo-status-bar": "~1.4.4",
-    "react": "18.2.0",
+    "expo-updates": "~0.16.4",
+    "expo": "~48.0.18",
+    "react-native-gesture-handler": "~2.9.0",
+    "react-native-reanimated": "~2.14.4",
+    "react-native-safe-area-context": "4.5.0",
+    "react-native-screens": "~3.20.0",
     "react-native": "0.71.8",
-    "zustand": "^4.3.9",
-    "react-native-gesture-handler": "~2.9.0"
+    "react": "18.2.0",
+    "zustand": "^4.3.9"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

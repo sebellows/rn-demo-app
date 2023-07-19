@@ -1,14 +1,23 @@
 import { Type } from '@/types'
 
-export const hasOwn = <O extends Type | object, K extends keyof O | string = keyof O | string>(
-  o: O,
-  key: K,
-  strict = false,
-) => {
+function hasOwn<TObject extends Type, Key extends keyof TObject>(
+  o: TObject,
+  key: Key,
+  strict?: boolean,
+): boolean
+function hasOwn<TObject extends object, Key extends string>(
+  o: TObject,
+  key: Key,
+  strict?: boolean,
+): boolean
+function hasOwn<TObject>(o: TObject, key: PropertyKey, strict?: boolean): boolean
+function hasOwn<TObject extends Type | object>(o: TObject, key: string, strict?: boolean): boolean
+function hasOwn(o: any, key: PropertyKey, strict?: any): boolean {
   const has = Object.prototype.hasOwnProperty.call(o, key)
 
-  return strict ? has && key in o && !!o[key as keyof O] : has
+  return Boolean(strict) ? has && key in o && !!o[key] : has
 }
+export { hasOwn }
 
 /**
  * Ensure that params are either an array or contain an array.

@@ -1,14 +1,16 @@
 import { StyleSheet } from 'react-native'
-import { createTheme } from '@shopify/restyle'
+import { BaseTheme, createTheme } from '@shopify/restyle'
 
-import { baseColors, colorModes, palette } from './color'
+import { baseColors, colorModes } from './color'
+import { IconSize } from './styles'
+import { buttonVariants } from './buttonStyles'
 
 let scheme = colorModes.light
 const bodyColors = scheme.neutral
 let bg = bodyColors['50']
 let fg = bodyColors['950']
 
-const colors = {
+const colors: BaseTheme['colors'] = {
   bodyBg: bg,
   bodyFg: fg,
   baseBorderColor: 'rgba(0, 0, 0, 0.125)',
@@ -16,36 +18,70 @@ const colors = {
   mutedBg: bodyColors['300'],
   mutedFg: bodyColors['700'],
 
-  primaryText: scheme.primary['500'],
+  neutral: scheme.neutral['500'],
+  neutralLight: scheme.neutral['300'],
+  neutralDark: scheme.neutral['700'],
+  neutralMuted: scheme.neutral['200'],
+  neutralFg: baseColors.white,
+
+  primary: scheme.primary['500'],
+  primaryLight: scheme.primary['300'],
+  primaryDark: scheme.primary['700'],
+  primaryMuted: scheme.primary['200'],
   primaryFg: baseColors.white,
-  primaryBg: scheme.primary['500'],
-  primaryBgMuted: scheme.primary['200'],
 
-  secondaryText: scheme.secondary['500'],
+  secondary: scheme.secondary['500'],
+  secondaryLight: scheme.secondary['300'],
+  secondaryDark: scheme.secondary['700'],
   secondaryFg: baseColors.white,
-  secondaryBg: scheme.secondary['500'],
-  secondaryBgMuted: scheme.secondary['200'],
+  secondaryMuted: scheme.secondary['200'],
 
-  successText: scheme.success['500'],
+  success: scheme.success['500'],
+  successLight: scheme.success['300'],
+  successDark: scheme.success['700'],
   successFg: baseColors.white,
-  successBg: scheme.success['500'],
-  successBgMuted: scheme.success['200'],
+  successMuted: scheme.success['200'],
 
-  warningText: scheme.warning['500'],
+  warning: scheme.warning['500'],
+  warningLight: scheme.warning['300'],
+  warningDark: scheme.warning['700'],
   warningFg: baseColors.white,
-  warningBg: scheme.warning['500'],
-  warningBgMuted: scheme.warning['200'],
+  warningMuted: scheme.warning['200'],
 
-  dangerText: scheme.danger['500'],
+  danger: scheme.danger['500'],
+  dangerLight: scheme.danger['300'],
+  dangerDark: scheme.danger['700'],
   dangerFg: baseColors.white,
-  dangerBg: scheme.danger['500'],
-  dangerBgMuted: scheme.danger['200'],
+  dangerMuted: scheme.danger['200'],
 }
 
 const themeConfig = {
   breakpoints: {
     phone: 0,
     tablet: 768,
+  },
+  border: {
+    thin: 0.5,
+    base: 1,
+    thick: 2,
+    chunky: 5,
+    default: 'baseBorderColor',
+    primary: scheme.primary['500'],
+    secondary: scheme.secondary['500'],
+    neutral: scheme.neutral['500'],
+    success: scheme.success['500'],
+    danger: scheme.danger['500'],
+    warning: scheme.warning['500'],
+    muted: scheme.neutral['300'],
+  },
+  borderRadii: {
+    none: 0,
+    xs: 2,
+    sm: 4,
+    md: 6,
+    lg: 8,
+    iconSmall: IconSize.small / 2,
+    iconLarge: IconSize.large / 2,
   },
   colors,
   spacing: {
@@ -68,6 +104,9 @@ const themeConfig = {
     '12': 48,
     '13': 56,
     '14': 64,
+  },
+  zIndices: {
+    elevated: 1,
   },
   textVariants: {
     defaults: {
@@ -112,46 +151,66 @@ const themeConfig = {
     small: {
       fontSize: 12,
       lineHeight: 18,
-      color: colors.mutedFg,
+      color: 'mutedFg',
     },
+    buttonLabel: {
+      fontWeight: 700,
+    },
+  },
+  buttonVariants: {
+    defaults: {
+      backgroundColor: 'bodyBg',
+      color: 'bodyFg',
+      shadowOpacity: 0.2,
+      borderWidth: 1,
+      borderColor: 'baseBorderColor',
+      padding: {
+        phone: '2',
+        tablet: '4',
+      },
+    },
+    ...buttonVariants,
   },
   cardVariants: {
     defaults: {
-      backgroundColor: colors.bodyBg,
-      color: colors.bodyFg,
+      backgroundColor: 'bodyBg',
+      color: 'bodyFg',
       shadowOpacity: 0.3,
       borderWidth: 1,
-      borderColor: colors.baseBorderColor,
+      borderColor: 'baseBorderColor',
       padding: {
         phone: '2',
         tablet: '4',
       },
     },
     primary: {
-      backgroundColor: scheme.primary['200'],
-      color: palette.gray['950'],
+      backgroundColor: 'primaryMuted',
+      color: 'bodyFg',
       shadowOpacity: 0.3,
     },
     secondary: {
-      backgroundColor: scheme.secondary['200'],
-      color: palette.gray['950'],
+      backgroundColor: 'secondaryMuted',
+      color: 'bodyFg',
       shadowOpacity: 0.1,
     },
     elevated: {
-      shadowColor: baseColors.black,
+      shadowColor: 'black',
       shadowOpacity: 0.2,
       shadowOffset: { width: 0, height: 5 },
       shadowRadius: 15,
       elevation: 5,
     },
   },
-  layoutVariants: {
+  iconVariants: {
     defaults: {},
-    centerAll: {
-      alignItems: 'center',
-      justifyContent: 'center',
+    small: {
+      width: IconSize.small,
+      height: IconSize.small,
     },
-    absoluteFill: StyleSheet.absoluteFillObject,
+    large: {
+      width: IconSize.large,
+      height: IconSize.large,
+    },
   },
 }
 
@@ -159,7 +218,7 @@ const theme = createTheme(themeConfig)
 
 export type Theme = typeof theme
 
-export const resolveThemeColorMode = (isDark?: boolean): Theme => {
+export const updateTheme = (isDark?: boolean): Theme => {
   if (isDark && scheme === colorModes.light) {
     scheme = colorModes.dark
   } else if (!isDark && scheme === colorModes.dark) {

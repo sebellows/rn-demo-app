@@ -1,4 +1,5 @@
 export * from './common'
+export * from './array.utils'
 export * from './clone'
 export * from './get'
 export * from './hasTouchHandler'

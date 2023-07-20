@@ -8,7 +8,8 @@ import { ThemeProvider, createTheme } from '@shopify/restyle'
 
 import SearchScreen from './screens/Search.screen'
 import ResultsListScreen from './screens/ResultsList.screen'
-import { resolveThemeColorMode } from './theme'
+import { updateTheme } from './theme'
+import { GlobalSettingsProvider } from './GlobalContext'
 
 const Stack = createStackNavigator()
 
@@ -17,18 +18,24 @@ const THEME_PERSISTENCE_KEY = 'THEME_TYPE'
 
 export const App = () => {
   const [darkMode, toggleDarkMode] = useState(false)
+  const [reducedMotionEnabled, setReducedMotion] = useState(false)
 
-  const theme = useMemo(() => resolveThemeColorMode(darkMode), [darkMode])
+  const theme = useMemo(() => updateTheme(darkMode), [darkMode])
 
   return (
-    <ThemeProvider theme={theme}>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerTitle: 'Business Search' }}>
-          <Stack.Screen name="Search" component={SearchScreen} />
-          <Stack.Screen name="ResultsList" component={ResultsListScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <GlobalSettingsProvider
+      mode={darkMode ? 'dark' : 'light'}
+      reducedMotionEnabled={reducedMotionEnabled}
+    >
+      <ThemeProvider theme={theme}>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerTitle: 'Business Search' }}>
+            <Stack.Screen name="Search" component={SearchScreen} />
+            <Stack.Screen name="ResultsList" component={ResultsListScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    </GlobalSettingsProvider>
   )
 }

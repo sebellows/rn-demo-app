@@ -1,3 +1,6 @@
+import { ValueOf } from 'type-fest'
+import { AnyObj } from '../../types'
+
 export const ColorAccents = [
   '50',
   '100',
@@ -64,3 +67,28 @@ export type ColorSchemes = {
   light: ColorVariants
   dark: ColorVariants
 }
+
+type PropValue = string | number | undefined | null
+
+export type ColorVariables = Record<string, PropValue>
+
+type GetConcrete<T extends AnyObj> = Record<keyof T, ValueOf<T, keyof T>>
+export type ThemeColors = GetConcrete<ColorVariables> & ColorPalette & ColorVariants
+
+// type OnlyColorVariables = PickIndexSignature<ThemeColors>
+// type ExceptColorVariables = OmitIndexSignature<ThemeColors>
+// type MergedColors = CustomTheme['variables'] &
+//   Except<OnlyColorVariables, StringKeyOf<CustomTheme['variables']>> &
+//   ExceptColorVariables
+
+/**
+ * We can use dot-notation to access the nested values for colors defined within our palette
+ * and color variants.
+ * @example
+ * const theme = useTheme()
+ * const mediumRed = theme.colors.red['500']
+ *
+ * OR, for easier access, use the `get` utility function:
+ * const mediumRed = get(theme, 'colors.red.500')
+ */
+// export type ThemeColorKey<TTheme extends RootTheme = RootTheme> = NestedKeyOf<TTheme['colors']>

@@ -1,7 +1,10 @@
-import { TextStyleProps } from "../style-utils"
-import { Text } from "./Text"
+import { TextProps } from '@shopify/restyle'
 
-type HeadingProps = TextStyleProps & { level: 1 | 2 | 3 | 4 | 5 | 6 }
+import { Theme } from '../theme'
+
+import { Text } from './Text'
+
+type HeadingProps = TextProps<Theme> & { level: 1 | 2 | 3 | 4 | 5 | 6 }
 
 export const Heading = ({ level = 1, ...props }: HeadingProps) => {
   return <Text variant={`h${level}`} {...props} />

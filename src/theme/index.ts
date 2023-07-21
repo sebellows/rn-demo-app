@@ -9,11 +9,19 @@ let scheme = colorModes.light
 const bodyColors = scheme.neutral
 let bg = bodyColors['50']
 let fg = bodyColors['950']
+let borderColor = 'rgba(0, 0, 0, 0.125)'
 
 const colors: BaseTheme['colors'] = {
   bodyBg: bg,
   bodyFg: fg,
-  baseBorderColor: 'rgba(0, 0, 0, 0.125)',
+  baseBorderColor: borderColor,
+
+  // For ReactNavigation theme configuration
+  background: bg,
+  card: bg,
+  text: fg,
+  border: borderColor,
+  notification: scheme.secondary['200'],
 
   mutedBg: bodyColors['300'],
   mutedFg: bodyColors['700'],
@@ -157,6 +165,41 @@ const themeConfig = {
       fontWeight: 700,
     },
   },
+  textInputVariants: {
+    defaults: {
+      flex: 1,
+      fontSize: 18,
+    },
+  },
+  iconVariants: {
+    defaults: {
+      color: 'mutedFg',
+      fontSize: IconSize.small,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    primary: {
+      color: 'primary',
+    },
+    secondary: {
+      color: 'secondary',
+    },
+    neutral: {
+      color: 'neutral',
+    },
+    inverted: {
+      color: 'inverted',
+    },
+    success: {
+      color: 'success',
+    },
+    warning: {
+      color: 'warning',
+    },
+    danger: {
+      color: 'danger',
+    },
+  },
   buttonVariants: {
     defaults: {
       backgroundColor: 'bodyBg',
@@ -193,23 +236,17 @@ const themeConfig = {
       color: 'bodyFg',
       shadowOpacity: 0.1,
     },
+    formControl: {
+      backgroundColor: 'white',
+      borderColor: 'baseBorderColor',
+      borderRadius: 'sm',
+    },
     elevated: {
       shadowColor: 'black',
       shadowOpacity: 0.2,
       shadowOffset: { width: 0, height: 5 },
       shadowRadius: 15,
       elevation: 5,
-    },
-  },
-  iconVariants: {
-    defaults: {},
-    small: {
-      width: IconSize.small,
-      height: IconSize.small,
-    },
-    large: {
-      width: IconSize.large,
-      height: IconSize.large,
     },
   },
 }
@@ -227,3 +264,5 @@ export const updateTheme = (isDark?: boolean): Theme => {
 
   return theme
 }
+
+export * from './styles'

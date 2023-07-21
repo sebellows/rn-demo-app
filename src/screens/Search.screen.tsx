@@ -1,15 +1,29 @@
-// import { StatusBar } from 'expo-status-bar'
-// import { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 
+import { SearchBar } from '../components/SearchBar'
+import yelp from '../api/yelp'
 import { Card, Text } from '../components'
-// import { useTheme } from '../theme'
 
 const SearchScreen = () => {
-  // const theme = useTheme()
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState([])
+
+  const searchApi = async () => {
+    const response = await yelp.get('/search', {
+      params: {
+        limit: 50,
+        query,
+        location: 'Ann Arbor',
+      },
+    })
+    setResults(response.data.businesses)
+  }
 
   return (
-    <Card variant="base">
+    <Card>
+      <SearchBar query={query} onQueryChange={setQuery} onQuerySubmit={searchApi} />
       <Text variant="h1">Search Screen</Text>
+      <Text variant="body">We have found {results.length} results</Text>
     </Card>
   )
 }

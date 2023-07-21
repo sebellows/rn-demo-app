@@ -1,6 +1,8 @@
-// import type { NavigatorScreenParams } from '@react-navigation/native'
 import SearchScreen from './screens/Search.screen'
-import ResultsListScreen from './screens/ResultsList.screen'
+import ResultsScreen from './screens/Results.screen'
+import { NotFound } from './screens/NotFound'
+import { RouteProp } from '@react-navigation/native'
+import { StackNavigationProp } from '@react-navigation/stack'
 
 export const SCREENS = {
   Search: {
@@ -9,19 +11,26 @@ export const SCREENS = {
   },
   Results: {
     title: 'Search Results',
-    component: ResultsListScreen,
+    component: ResultsScreen,
+  },
+  NotFound: {
+    title: 'Not Found',
+    component: NotFound,
   },
 }
 
-type ParamListTypes = {
-  Home: undefined
-  NotFound: undefined
-  // LinkComponent: NavigatorScreenParams<LinkComponentDemoParamList> | undefined
-}
+export type StackNavProp<T extends keyof RootStackParamList> = StackNavigationProp<
+  RootStackParamList,
+  T
+>
 
 export type RootStackParamList = {
-  [P in Exclude<keyof typeof SCREENS, keyof ParamListTypes>]: undefined
-} & ParamListTypes
+  Search: undefined
+  Results: { id: string }
+  NotFound: { path: string }
+}
+
+export type StackRouteProp<T extends keyof RootStackParamList> = RouteProp<RootStackParamList, T>
 
 // Make the default RootParamList the same as the RootStackParamList
 declare global {

@@ -16,6 +16,7 @@ import { range } from '../utils'
 import { Theme } from '../theme'
 import { useGlobalSettings } from '../GlobalContext'
 import { IconSizeKey, iconSizeProps, parseIconSize } from '../theme/styles'
+
 import { AnimatedBox } from './AnimatedBox'
 
 type ActivityIndicatorProps = BoxProps<Theme> & {

@@ -11,12 +11,11 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { ThemeProvider } from '@shopify/restyle'
 
 import SearchScreen from './screens/Search.screen'
-import ResultsScreen from './screens/Results.screen'
+import ResultsScreen from './screens/ResultDetails.screen'
 import { updateTheme } from './theme'
 import { GlobalSettingsProvider } from './GlobalContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
-const Stack = createStackNavigator()
+import { Navigation } from './Navigation'
 
 const NAVIGATION_PERSISTENCE_KEY = 'NAVIGATION_STATE'
 const THEME_PERSISTENCE_KEY = 'THEME_TYPE'
@@ -65,20 +64,15 @@ export const App = () => {
       mode={darkMode ? 'dark' : 'light'}
       reducedMotionEnabled={reducedMotionEnabled}
     >
+      <StatusBar style="auto" />
       <ThemeProvider theme={theme}>
-        <NavigationContainer
+        <Navigation
           theme={{ dark: darkMode, colors: theme.colors as RNNavigationTheme['colors'] }}
           initialState={initialState}
           onStateChange={state =>
             AsyncStorage?.setItem(NAVIGATION_PERSISTENCE_KEY, JSON.stringify(state))
           }
-        >
-          <Stack.Navigator screenOptions={{ headerTitle: 'Business Search' }}>
-            <Stack.Screen name="Search" component={SearchScreen} />
-            <Stack.Screen name="Results" component={ResultsScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-        <StatusBar style="auto" />
+        />
       </ThemeProvider>
     </GlobalSettingsProvider>
   )

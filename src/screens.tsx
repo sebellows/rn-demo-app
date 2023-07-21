@@ -1,5 +1,5 @@
 import SearchScreen from './screens/Search.screen'
-import ResultsScreen from './screens/Results.screen'
+import ResultsScreen from './screens/ResultDetails.screen'
 import { NotFound } from './screens/NotFound'
 import { RouteProp } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'

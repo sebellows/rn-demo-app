@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react'
 import { useRoute } from '@react-navigation/native'
-import { FlatList, Image, StyleSheet } from 'react-native'
+import { FlatList } from 'react-native'
 
-import yelp from '../api/yelp'
-import { Card, Text } from '../components'
-import { BusinessDetails } from '../types/business-details.types'
+import { Card, Image, Text } from '../components'
+import { YelpDto } from '../types/YelpDto'
 import { StackRouteProp } from '../screens'
+import { api } from '../api'
 
 const ResultsScreen = () => {
   const {
     params: { id },
   } = useRoute<StackRouteProp<'Results'>>()
-  const [result, setResult] = useState<BusinessDetails | null>(null)
+  const [result, setResult] = useState<YelpDto.BusinessDetails | null>(null)
 
   const getResult = async (id: string) => {
-    const response = await yelp.get(`/${id}`)
+    const response = await api.get(`/${id}`)
     setResult(response.data)
   }
 
@@ -33,18 +33,11 @@ const ResultsScreen = () => {
         data={result.photos}
         keyExtractor={photo => photo}
         renderItem={({ item }) => {
-          return <Image style={styles.image} source={{ uri: item }} />
+          return <Image width={300} height={200} source={{ uri: item }} />
         }}
       />
     </Card>
   )
 }
-
-const styles = StyleSheet.create({
-  image: {
-    height: 200,
-    width: 300,
-  },
-})
 
 export default ResultsScreen

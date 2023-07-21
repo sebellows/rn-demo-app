@@ -7,9 +7,9 @@ import {
 } from '@react-navigation/native'
 
 import SearchScreen from './screens/Search.screen'
-import ResultsScreen from './screens/Results.screen'
+import ResultsScreen from './screens/ResultDetails.screen'
 import { RootStackParamList } from './screens'
-import { Box, IconButton } from './components'
+import { IconButton } from './components'
 
 type HeaderIconButtonProps = {
   icon: string
@@ -29,7 +29,7 @@ export const Navigation = ({
   onStateChange,
 }: {
   theme: RNNavigationTheme
-  initialState: InitialState
+  initialState?: InitialState
   onStateChange: (state: NavigationState | undefined) => void
 }) => {
   return (

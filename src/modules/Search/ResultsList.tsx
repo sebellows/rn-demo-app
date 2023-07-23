@@ -14,8 +14,8 @@ const ResultsList = ({ title, results }: { title: string; results: YelpDto.Busin
   }
 
   return (
-    <Card mb="2.5">
-      <Text variant="h4" ml="4" mb="1">
+    <Card pl="0" mb="2.5">
+      <Text variant="h4" mb="1.5">
         {title}
       </Text>
       <FlatList
@@ -23,11 +23,14 @@ const ResultsList = ({ title, results }: { title: string; results: YelpDto.Busin
         showsHorizontalScrollIndicator={false}
         data={results}
         keyExtractor={result => result.id}
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
           return (
-            <Button onPress={() => navigation.navigate('Results', { id: item.id })}>
+            <TouchableOpacity
+              style={{ marginLeft: index === 0 ? 0 : 10 }}
+              onPress={() => navigation.navigate('Results', { id: item.id })}
+            >
               <ResultsItem result={item} />
-            </Button>
+            </TouchableOpacity>
           )
         }}
       />

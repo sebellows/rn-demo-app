@@ -1,6 +1,5 @@
 import { isEmpty, isNil, isNumber, isPlainObject, isPrimitive, isString, isUndefined } from './lang'
 import { cloneDeep } from './clone'
-import { NumericRecord, PropertyPath } from '../types'
 import { hasOwn } from './common'
 
 /**
@@ -8,6 +7,8 @@ import { hasOwn } from './common'
  * The below is taken from `@types/lodash` because the `Get` type in type-fest could
  * not account for the setting of default value.
  */
+
+type NumericRecord<T> = { [key: number]: T }
 
 type GetIndexedField<T, K> = K extends keyof T
   ? T[K]
@@ -45,6 +46,15 @@ type GetFieldType<T, P> = P extends `${infer Left}.${infer Right}`
     : undefined
   : IndexedFieldWithPossiblyUndefined<T, P>
 
+/**
+ * Gets the property value at path of object. If the resolved value is undefined the
+ * defaultValue is used in its place.
+ *
+ * @param object The object to query.
+ * @param path The path of the property to get.
+ * @param defaultValue The value returned if the resolved value is undefined.
+ * @return Returns the resolved value.
+ */
 function get<TObject extends object, TKey extends keyof TObject>(
   obj: TObject,
   path: TKey | [TKey],
@@ -58,6 +68,7 @@ function get<TObject extends object, TKey extends keyof TObject, TDefault>(
   path: TKey | [TKey],
   defaultValue: TDefault,
 ): Exclude<TObject[TKey], undefined> | TDefault
+/* @ts-ignore */
 function get<
   TObject extends object,
   TKey1 extends keyof TObject,
@@ -140,18 +151,18 @@ function get<T, TDefault>(
   path: number,
   defaultValue: TDefault,
 ): T | TDefault
-function get<TDefault>(obj: null | undefined, path: PropertyPath, defaultValue: TDefault): TDefault
-function get(obj: null | undefined, path: PropertyPath): undefined
+function get<TDefault>(obj: null | undefined, path: PropertyKey, defaultValue: TDefault): TDefault
+function get(obj: null | undefined, path: PropertyKey): undefined
 function get<TObject, TPath extends string>(
-  data: TObject,
+  obj: TObject,
   path: TPath,
 ): string extends TPath ? any : GetFieldType<TObject, TPath>
 function get<TObject, TPath extends string, TDefault = GetFieldType<TObject, TPath>>(
-  data: TObject,
+  obj: TObject,
   path: TPath,
   defaultValue: TDefault,
 ): Exclude<GetFieldType<TObject, TPath>, null | undefined> | TDefault
-function get(obj: any, path: PropertyPath, defaultValue?: any): any {
+function get(obj: any, path: PropertyKey, defaultValue?: any): any {
   if (isNil(obj) || isPrimitive(obj)) return obj ?? defaultValue
 
   if (!isEmpty(path)) return defaultValue

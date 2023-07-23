@@ -1,26 +1,26 @@
+import 'react-native-gesture-handler'
+
 import { StatusBar } from 'expo-status-bar'
 import { useEffect, useMemo, useState } from 'react'
 import { Linking, Platform, Switch, useColorScheme } from 'react-native'
-import { createStackNavigator } from '@react-navigation/stack'
-import {
-  InitialState,
-  NavigationContainer,
-  Theme as RNNavigationTheme,
-} from '@react-navigation/native'
+import { registerRootComponent } from 'expo'
+import { Asset } from 'expo-asset'
+import { Assets } from '@react-navigation/elements'
+import { InitialState, Theme as RNNavigationTheme } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ThemeProvider } from '@shopify/restyle'
 
-import SearchScreen from './screens/Search.screen'
-import ResultsScreen from './screens/ResultDetails.screen'
 import { updateTheme } from './theme'
 import { GlobalSettingsProvider } from './GlobalContext'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Navigation } from './Navigation'
+
+Asset.loadAsync(Assets)
 
 const NAVIGATION_PERSISTENCE_KEY = 'NAVIGATION_STATE'
 const THEME_PERSISTENCE_KEY = 'THEME_TYPE'
 
-export const App = () => {
+const App = () => {
   const colorScheme = useColorScheme()
   const [darkMode, toggleDarkMode] = useState(colorScheme === 'dark')
   const [reducedMotionEnabled, setReducedMotion] = useState(false)
@@ -77,3 +77,5 @@ export const App = () => {
     </GlobalSettingsProvider>
   )
 }
+
+registerRootComponent(App)

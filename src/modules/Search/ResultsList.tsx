@@ -2,7 +2,7 @@ import { FlatList, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import { YelpDto } from '../../types/YelpDto'
-import { Card, Text } from '../../components'
+import { Button, Card, Text } from '../../components'
 
 import { ResultsItem } from './ResultsItem'
 
@@ -25,9 +25,9 @@ const ResultsList = ({ title, results }: { title: string; results: YelpDto.Busin
         keyExtractor={result => result.id}
         renderItem={({ item }) => {
           return (
-            <TouchableOpacity onPress={() => navigation.navigate('Results', { id: item.id })}>
+            <Button onPress={() => navigation.navigate('Results', { id: item.id })}>
               <ResultsItem result={item} />
-            </TouchableOpacity>
+            </Button>
           )
         }}
       />

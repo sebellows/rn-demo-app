@@ -1,7 +1,7 @@
 {
   "name": "rn-demo-app",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "src/App.tsx",
   "private": true,
   "scripts": {
     "test": "jest",
@@ -12,6 +12,7 @@
     "type-check": "tsc -b"
   },
   "dependencies": {
+    "@expo/vector-icons": "^13.0.0",
     "@react-native-async-storage/async-storage": "1.17.11",
     "@react-native-masked-view/masked-view": "0.2.8",
     "@react-navigation/native": "^6.1.7",
@@ -29,18 +30,18 @@
     "react-native-reanimated": "~2.14.4",
     "react-native-safe-area-context": "4.5.0",
     "react-native-screens": "~3.20.0",
-    "zustand": "^4.3.9",
-    "@expo/vector-icons": "^13.0.0"
+    "zustand": "^4.3.9"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/jest": "^29.5.3",
-    "@types/react": "^18.2.15",
+    "@types/react": "^18.0.27",
     "@types/react-native": "^0.72.2",
     "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^29.6.1",
     "jest": "^29.6.1",
     "prettier": "^3.0.0",
+    "react-native-dotenv": "^3.4.9",
     "react-native-test-app": "^2.5.10",
     "react-test-renderer": "^18.2.0",
     "type-fest": "^3.13.0",

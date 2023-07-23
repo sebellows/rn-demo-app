@@ -1,24 +1,27 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { ScrollView } from 'react-native'
 
-import { ResultsList, SearchBar } from '@/modules/Search'
-import { useApi } from '@/api'
-import { Card, Text } from '@/components'
+import { ResultsList, SearchBar } from '../modules/Search'
+import { useApi } from '../api'
+import { Card, Text } from '../components'
 
 const SearchScreen = () => {
-  const [term, setQuery] = useState('')
+  const [term, setTerm] = useState('')
   const [searchApi, results, errorMessage] = useApi()
 
-  const filterResultsByPrice = (price: string) => {
-    // price === '$' || '$$' || '$$$'
-    return results.filter(result => {
-      return result.price === price
-    })
-  }
+  const filterResultsByPrice = useCallback(
+    (price: string) => {
+      // price === '$' || '$$' || '$$$'
+      return results.filter(result => {
+        return result.price === price
+      })
+    },
+    [results],
+  )
 
   return (
     <Card>
-      <SearchBar term={term} onTermChange={setQuery} onTermSubmit={searchApi} />
+      <SearchBar term={term} onTermChange={setTerm} onTermSubmit={searchApi} />
       {errorMessage && (
         <Text variant="body" color="danger">
           {errorMessage}

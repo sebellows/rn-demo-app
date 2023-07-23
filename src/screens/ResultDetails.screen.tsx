@@ -4,7 +4,7 @@ import { FlatList } from 'react-native'
 
 import { Card, Image, Text } from '../components'
 import { YelpDto } from '../types/YelpDto'
-import { StackRouteProp } from '../screens'
+import { StackRouteProp } from '../routes'
 import { api } from '../api'
 
 const ResultsScreen = () => {

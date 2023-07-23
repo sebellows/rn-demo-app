@@ -15,8 +15,6 @@ export const useApi = (): [SearchApi, SearchResults, string] => {
   ): Promise<void> => {
     const term = e.nativeEvent.text
 
-    console.log(`term is: ${term}`)
-
     try {
       const response = await api.get('/search', {
         params: {
@@ -27,6 +25,8 @@ export const useApi = (): [SearchApi, SearchResults, string] => {
       })
 
       const data = response.data as YelpDto.Query
+
+      console.log(`term is: ${term}`, response?.data ?? response)
 
       setResults(data.businesses)
     } catch (err) {

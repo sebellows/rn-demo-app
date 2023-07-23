@@ -8,7 +8,7 @@ import {
 
 import SearchScreen from './screens/Search.screen'
 import ResultsScreen from './screens/ResultDetails.screen'
-import { RootStackParamList } from './screens'
+import { RootStackParamList } from './routes'
 import { IconButton } from './components'
 
 type HeaderIconButtonProps = {

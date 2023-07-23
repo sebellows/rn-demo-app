@@ -12,6 +12,9 @@ let fg = bodyColors['950']
 let borderColor = 'rgba(0, 0, 0, 0.125)'
 
 const colors: BaseTheme['colors'] = {
+  // 'white', 'black', 'current', 'inherit', 'transparent'
+  ...baseColors,
+
   bodyBg: bg,
   bodyFg: fg,
   baseBorderColor: borderColor,
@@ -74,13 +77,13 @@ const themeConfig = {
     thick: 2,
     chunky: 5,
     default: 'baseBorderColor',
-    primary: scheme.primary['500'],
-    secondary: scheme.secondary['500'],
-    neutral: scheme.neutral['500'],
-    success: scheme.success['500'],
-    danger: scheme.danger['500'],
-    warning: scheme.warning['500'],
-    muted: scheme.neutral['300'],
+    primary: 'primary',
+    secondary: 'secondary',
+    neutral: 'neutral',
+    success: 'success',
+    danger: 'danger',
+    warning: 'warning',
+    muted: 'mutedBg',
   },
   borderRadii: {
     none: 0,
@@ -118,13 +121,13 @@ const themeConfig = {
   },
   textVariants: {
     defaults: {
-      color: colors.bodyFg,
+      color: 'bodyFg',
     },
     h1: {
       fontSize: 36,
       fontWeight: 800,
       lineHeight: 40,
-      color: colors.bodyFg,
+      color: 'bodyFg',
     },
     h2: {
       fontSize: 24,
@@ -218,9 +221,6 @@ const themeConfig = {
     defaults: {
       backgroundColor: 'bodyBg',
       color: 'bodyFg',
-      shadowOpacity: 0.3,
-      borderWidth: 1,
-      borderColor: 'baseBorderColor',
       padding: {
         phone: '2',
         tablet: '4',
@@ -242,6 +242,7 @@ const themeConfig = {
       borderRadius: 'sm',
     },
     elevated: {
+      backgroundColor: 'bodyBg',
       shadowColor: 'black',
       shadowOpacity: 0.2,
       shadowOffset: { width: 0, height: 5 },

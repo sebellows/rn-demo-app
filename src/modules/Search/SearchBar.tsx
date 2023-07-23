@@ -1,8 +1,7 @@
 import React from 'react'
 import { TextInputEndEditingEventData, NativeSyntheticEvent } from 'react-native'
-import { Card } from '@/components/Card'
-import { TextField } from '@/components/TextInput'
-import { Icon } from '@/components/Icon'
+
+import { Card, Icon, TextField } from '../../components'
 
 const SearchBar = ({
   term,

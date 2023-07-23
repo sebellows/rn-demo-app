@@ -32,3 +32,5 @@ export type Callback<T extends any = void, TArgs extends unknown[] = any[]> = (.
 export type AsyncCallback<T extends any = void, Args extends unknown[] = any[]> = (
   ...args: Args
 ) => Promise<T | never>
+
+export type PartialRecord<T, K extends PropertyKey = string> = Partial<Record<K, T>>

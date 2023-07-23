@@ -26,8 +26,6 @@ export const useApi = (): [SearchApi, SearchResults, string] => {
 
       const data = response.data as YelpDto.Query
 
-      console.log(`term is: ${term}`, response?.data ?? response)
-
       setResults(data.businesses)
     } catch (err) {
       setErrorMessage('Something went wrong')

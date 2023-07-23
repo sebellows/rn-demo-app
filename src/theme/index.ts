@@ -1,9 +1,7 @@
-import { StyleSheet } from 'react-native'
 import { BaseTheme, createTheme } from '@shopify/restyle'
 
 import { baseColors, colorModes } from './color'
-import { IconSize } from './styles'
-import { buttonVariants } from './buttonStyles'
+import { buttonVariants, IconSize } from './styles'
 
 let scheme = colorModes.light
 const bodyColors = scheme.neutral
@@ -71,26 +69,14 @@ const themeConfig = {
     phone: 0,
     tablet: 768,
   },
-  border: {
-    thin: 0.5,
-    base: 1,
-    thick: 2,
-    chunky: 5,
-    default: 'baseBorderColor',
-    primary: 'primary',
-    secondary: 'secondary',
-    neutral: 'neutral',
-    success: 'success',
-    danger: 'danger',
-    warning: 'warning',
-    muted: 'mutedBg',
-  },
   borderRadii: {
     none: 0,
     xs: 2,
     sm: 4,
     md: 6,
     lg: 8,
+    pill: 24,
+    circle: 9999,
     iconSmall: IconSize.small / 2,
     iconLarge: IconSize.large / 2,
   },
@@ -153,7 +139,6 @@ const themeConfig = {
       fontSize: 14,
       fontWeight: 600,
       lineHeight: 24,
-      textTransform: 'uppercase',
     },
     body: {
       fontSize: 16,

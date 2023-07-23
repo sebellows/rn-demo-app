@@ -1,5 +1,6 @@
-import { AllProps, BaseTheme, PropValue, RNStyle, RNStyleProperty } from '@shopify/restyle'
-import { ColorVariant, ColorVariantNames } from './color'
+import { AllProps, BaseTheme } from '@shopify/restyle'
+
+import { ColorVariant, ColorVariantNames } from '../color'
 
 type ButtonVariants = Record<ColorVariant | `${ColorVariant}Outline`, Partial<AllProps<BaseTheme>>>
 

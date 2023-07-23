@@ -1,4 +1,4 @@
-import React, { Dispatch, PropsWithChildren, SetStateAction, useContext, useState } from 'react'
+import React, { Dispatch, PropsWithChildren, SetStateAction, useContext } from 'react'
 
 export const themeModes = Object.freeze(['dark', 'light'])
 

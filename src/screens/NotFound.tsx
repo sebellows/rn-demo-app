@@ -1,35 +1,18 @@
-import type { StackScreenProps } from '@react-navigation/stack'
 import * as React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { Button } from 'react-native-paper'
+import { useNavigation, useRoute } from '@react-navigation/native'
 
-import type { RootStackParamList } from '../screens'
+import type { StackNavProp, StackRouteProp } from '../routes'
+import { Button, Card, Heading } from '../components'
 
-export const NotFound = ({
-  route,
-  navigation,
-}: StackScreenProps<RootStackParamList, 'NotFound'>) => {
+export const NotFound = () => {
+  const route = useRoute<StackRouteProp<'NotFound'>>()
+  const { navigate } = useNavigation<StackNavProp<'NotFound'>>()
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>404 Not Found ({route.path})</Text>
-      <Button mode="contained" onPress={() => navigation.navigate('Home')} style={styles.button}>
+    <Card flex={1} justifyContent="center" alignItems="center" p="8">
+      <Heading level={1}>404 Not Found ({route.path})</Heading>
+      <Button variant="primary" mb="10" onPress={() => navigate('Search')}>
         Go to home
       </Button>
-    </View>
+    </Card>
   )
 }
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 36,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 8,
-  },
-  button: {
-    margin: 24,
-  },
-})

@@ -1,7 +1,7 @@
-import { RNStyle } from '@shopify/restyle'
+import { AllProps, BaseTheme, PropValue, RNStyle, RNStyleProperty } from '@shopify/restyle'
 import { ColorVariant, ColorVariantNames } from './color'
 
-type ButtonVariants = Record<ColorVariant | `${ColorVariant}Outline`, RNStyle>
+type ButtonVariants = Record<ColorVariant | `${ColorVariant}Outline`, Partial<AllProps<BaseTheme>>>
 
 export const buttonVariants = ColorVariantNames.reduce((acc, variant) => {
   acc[variant] = {
@@ -11,7 +11,7 @@ export const buttonVariants = ColorVariantNames.reduce((acc, variant) => {
   acc[`${variant}Outline`] = {
     backgroundColor: 'bodyBg',
     borderColor: variant,
-    borderWidth: 1,
+    // borderWidth: 1,
     color: variant,
   }
 

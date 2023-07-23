@@ -1,24 +1,61 @@
-import { StatusBar } from 'expo-status-bar'
-import { useMemo, useState } from 'react'
-import { Switch } from 'react-native'
-import { createStackNavigator } from '@react-navigation/stack'
-import { NavigationContainer } from '@react-navigation/native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { ThemeProvider, createTheme } from '@shopify/restyle'
+import 'react-native-gesture-handler'
 
-import SearchScreen from './screens/Search.screen'
-import ResultsListScreen from './screens/ResultsList.screen'
+import { StatusBar } from 'expo-status-bar'
+import { useEffect, useMemo, useState } from 'react'
+import { Linking, Platform, Switch, useColorScheme } from 'react-native'
+import { registerRootComponent } from 'expo'
+import { Asset } from 'expo-asset'
+import { Assets } from '@react-navigation/elements'
+import { InitialState, Theme as RNNavigationTheme } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { ThemeProvider } from '@shopify/restyle'
+
 import { updateTheme } from './theme'
 import { GlobalSettingsProvider } from './GlobalContext'
+import { Navigation } from './Navigation'
 
-const Stack = createStackNavigator()
+Asset.loadAsync(Assets)
 
 const NAVIGATION_PERSISTENCE_KEY = 'NAVIGATION_STATE'
 const THEME_PERSISTENCE_KEY = 'THEME_TYPE'
 
-export const App = () => {
-  const [darkMode, toggleDarkMode] = useState(false)
+const App = () => {
+  const colorScheme = useColorScheme()
+  const [darkMode, toggleDarkMode] = useState(colorScheme === 'dark')
   const [reducedMotionEnabled, setReducedMotion] = useState(false)
+  const [initialState, setInitialState] = useState<InitialState | undefined>()
+
+  useEffect(() => {
+    const restoreState = async () => {
+      try {
+        const initialUrl = await Linking.getInitialURL()
+
+        if (Platform.OS !== 'web' || initialUrl === null) {
+          const savedState = await AsyncStorage?.getItem(NAVIGATION_PERSISTENCE_KEY)
+
+          const state = savedState ? JSON.parse(savedState) : undefined
+
+          if (state !== undefined) {
+            setInitialState(state)
+          }
+        }
+      } finally {
+        try {
+          const themeMode = await AsyncStorage?.getItem(THEME_PERSISTENCE_KEY)
+          const currentMode = darkMode ? 'dark' : 'light'
+
+          if (currentMode !== themeMode) {
+            toggleDarkMode(themeMode === 'dark')
+          }
+        } catch (e) {
+          // Ignore
+        }
+      }
+    }
+
+    restoreState()
+  }, [])
 
   const theme = useMemo(() => updateTheme(darkMode), [darkMode])
 
@@ -27,15 +64,18 @@ export const App = () => {
       mode={darkMode ? 'dark' : 'light'}
       reducedMotionEnabled={reducedMotionEnabled}
     >
+      <StatusBar style="auto" />
       <ThemeProvider theme={theme}>
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerTitle: 'Business Search' }}>
-            <Stack.Screen name="Search" component={SearchScreen} />
-            <Stack.Screen name="ResultsList" component={ResultsListScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-        <StatusBar style="auto" />
+        <Navigation
+          theme={{ dark: darkMode, colors: theme.colors as RNNavigationTheme['colors'] }}
+          initialState={initialState}
+          onStateChange={state =>
+            AsyncStorage?.setItem(NAVIGATION_PERSISTENCE_KEY, JSON.stringify(state))
+          }
+        />
       </ThemeProvider>
     </GlobalSettingsProvider>
   )
 }
+
+registerRootComponent(App)

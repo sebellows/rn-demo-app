@@ -1,6 +1,5 @@
 import { isEmpty, isNil, isNumber, isPlainObject, isPrimitive, isString, isUndefined } from './lang'
 import { cloneDeep } from './clone'
-import { hasOwn } from './common'
 
 /**
  * NOTE:
@@ -165,15 +164,13 @@ function get<TObject, TPath extends string, TDefault = GetFieldType<TObject, TPa
 function get(obj: any, path: PropertyKey, defaultValue?: any): any {
   if (isNil(obj) || isPrimitive(obj)) return obj ?? defaultValue
 
-  if (!isEmpty(path)) return defaultValue
+  if (isEmpty(path)) return defaultValue
 
-  let i = 0
   let currObj = cloneDeep(obj)
   let paths: string[] = []
 
-  if (hasOwn(path, 'length')) {
-    if (isString(path)) paths = path.split('.')
-    else if (Array.isArray(path)) paths = path.slice()
+  if (isString(path)) {
+    paths = path.split('.')
   }
 
   if (!paths.length) return defaultValue
@@ -183,22 +180,21 @@ function get(obj: any, path: PropertyKey, defaultValue?: any): any {
       currObj = currObj[p]
     } else if (Array.isArray(currObj)) {
       let index = p.match(/(?<=\[)\d+(?=\])/)?.[0]
-      if (index) {
-        currObj = currObj[+index]
-      } else if (isNumber(p)) {
-        currObj = currObj[+p]
+
+      if (isUndefined(index)) break
+
+      if (isNumber(parseFloat(index))) {
+        currObj = currObj[parseFloat(index)]
+      } else if (parseFloat(p)) {
+        currObj = currObj[parseFloat(p)]
       }
+    } else {
+      currObj = undefined
+      break
     }
-
-    if (isPlainObject(currObj)) {
-      const dotPath = paths.slice(i).join('.')
-      return get(currObj, dotPath, defaultValue)
-    }
-
-    i++
   }
 
-  return isUndefined(currObj) ? currObj : defaultValue
+  return isUndefined(currObj) && defaultValue ? defaultValue : currObj
 }
 
 export { get }

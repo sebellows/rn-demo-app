@@ -1,7 +1,8 @@
 import { Constructor, ValueOf } from 'type-fest'
 
+import { AnyObj, AsyncFunction } from '../types'
+
 import { hasOwn } from './common'
-import { AnyObj, AsyncCallback, AsyncFunction, Callback } from '@/types'
 
 /**
  * @internal
@@ -244,18 +245,6 @@ export function isClass<T, TArgs extends unknown[] = any>(
   }
 
   return _isClass
-}
-
-export function isCallback<T = any>(value: unknown, strict?: boolean): value is Callback<T> {
-  if (strict) {
-    return isFunction(value) && value.length === 0
-  }
-
-  return isFunction(value)
-}
-
-export function isCallable<T>(value: unknown): value is Callback<T> | AsyncCallback<T> {
-  return isFunction(value) && isCallback(value)
 }
 
 export function isMap<K = any, V = any>(value: unknown): value is Map<K, V> {

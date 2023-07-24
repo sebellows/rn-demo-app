@@ -22,6 +22,7 @@ export type ButtonProps = PressableProps &
     size?: ButtonSize
     mode?: ButtonMode
     block?: boolean
+    borderless?: boolean
   }
 
 const ButtonBase = createRestyleComponent<ButtonProps, Theme>(
@@ -64,13 +65,24 @@ const resolveButtonSizeStyles = (size?: ButtonSize) => {
 }
 
 export const Button = forwardRef<typeof ButtonBase, ButtonProps>(
-  ({ children, size, mode, block, ...props }, ref) => {
+  ({ children, size, mode, block, borderless, opacity: opacityProp = 1, ...props }, ref) => {
     const sizeStyles = resolveButtonSizeStyles(size)
-    const borderWidth = isTextButton(mode) ? 0 : 1
+    const borderWidth = isTextButton(mode) || borderless ? 0 : 1
     const width = block ? '100%' : undefined
+    const opacity = props?.disabled ? 0.65 : opacityProp
 
     return (
-      <ButtonBase ref={ref} {...sizeStyles} borderWidth={borderWidth} width={width} {...props}>
+      <ButtonBase
+        ref={ref}
+        {...sizeStyles}
+        shadowOffset={{ width: 0, height: 0 }}
+        shadowRadius={props?.disabled ? 0 : 2}
+        shadowOpacity={0.2}
+        borderWidth={borderWidth}
+        width={width}
+        opacity={opacity}
+        {...props}
+      >
         {children}
       </ButtonBase>
     )

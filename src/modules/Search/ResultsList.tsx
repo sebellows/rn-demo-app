@@ -1,8 +1,8 @@
-import { FlatList, TouchableOpacity } from 'react-native'
+import { Dimensions, FlatList, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import { YelpDto } from '../../types/YelpDto'
-import { Button, Card, Text } from '../../components'
+import { Box, Card, Text } from '../../components'
 
 import { ResultsItem } from './ResultsItem'
 
@@ -19,18 +19,25 @@ const ResultsList = ({ title, results }: { title: string; results: YelpDto.Busin
         {title}
       </Text>
       <FlatList
-        horizontal
-        showsHorizontalScrollIndicator={false}
+        // horizontal
+        // showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         data={results}
         keyExtractor={result => result.id}
         renderItem={({ item, index }) => {
           return (
-            <TouchableOpacity
-              style={{ marginLeft: index === 0 ? 0 : 10 }}
-              onPress={() => navigation.navigate('Results', { id: item.id })}
-            >
-              <ResultsItem result={item} />
-            </TouchableOpacity>
+            <>
+              <TouchableOpacity onPress={() => navigation.navigate('Results', { id: item.id })}>
+                <ResultsItem result={item} />
+              </TouchableOpacity>
+              <Box
+                backgroundColor="baseBorderColor"
+                height={1}
+                my="4"
+                width="100%"
+                visible={index !== results.length - 1}
+              />
+            </>
           )
         }}
       />

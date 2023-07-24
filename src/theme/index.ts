@@ -149,6 +149,11 @@ const themeConfig = {
       lineHeight: 18,
       color: 'mutedFg',
     },
+    fine: {
+      fontSize: 10,
+      lineHeight: 15,
+      color: 'mutedFg',
+    },
     buttonLabel: {
       fontWeight: 700,
     },
@@ -218,6 +223,11 @@ const themeConfig = {
     },
     secondary: {
       backgroundColor: 'secondaryMuted',
+      color: 'bodyFg',
+      shadowOpacity: 0.1,
+    },
+    error: {
+      backgroundColor: 'dangerMuted',
       color: 'bodyFg',
       shadowOpacity: 0.1,
     },

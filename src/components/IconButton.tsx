@@ -1,9 +1,7 @@
 import { forwardRef } from 'react'
-import { Pressable, View } from 'react-native'
-import { Button, ButtonBase, ButtonProps, getButtonSize } from './Button'
+import { Button, ButtonBase, ButtonProps } from './Button'
 import { Icon, IconProps } from './Icon'
-import { VariantProps } from '@shopify/restyle'
-import { Theme, parseIconSize } from '../theme'
+import { parseIconSize } from '../theme'
 import { ColorVariant } from '../theme/color'
 
 type IconButtonProps = ButtonProps &

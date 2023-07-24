@@ -13,9 +13,12 @@ const SearchBar = ({
   onTermSubmit: (e: NativeSyntheticEvent<TextInputEndEditingEventData>) => void
 }) => {
   return (
-    <Card variant="formControl" mt="10" height={50} flexDirection="row" borderRadius="md">
-      <Icon name="search" fontSize={35} alignSelf="center" mx="4" />
+    <Card variant="formControl" mt="4" height={50} flexDirection="row" borderRadius="md">
+      <Icon name="search" size={28} color="mutedFg" alignSelf="center" ml="2" mr="4" />
       <TextField
+        color="neutralDark"
+        fontSize={14}
+        placeholderTextColor="mutedFg"
         autoCapitalize="none"
         autoCorrect={false}
         placeholder="Search"

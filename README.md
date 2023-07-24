@@ -4,4 +4,16 @@
   <img alt="Business Search Screenshot" src="rn-business-search-screenshot.png" width="320" />
 </p>
 
-I've spent the last 7 years working on projects for corporate employers and thereby having none of the physical (virtual?) proof that I can do the things I've been doing when looking for new employment. Hence this repository here. It's really just a simple React Native app made with Expo that uses ideas from a tutorial mixed with things that I wanted to use (like Shopify's Restyle library). The business search data comes from Yelp's Fusion API service.
+## Features
+
+- Built with React Native and Expo
+- [Yelp Fusion API](https://docs.developer.yelp.com/docs/fusion-intro) for fetching search results
+- Shopify's [Restyle](https://github.com/Shopify/restyle/) library for quick, functional theming of React Native components
+- [React Navigation](https://github.com/react-navigation)
+- [Reanimated](https://github.com/software-mansion/react-native-reanimated) v3
+- [Feather](https://feathericons.com/) icons
+
+## Roadmap
+
+- [Zustand](https://github.com/pmndrs/zustand) for state management
+- Caching of search results to reduce API calls and to prevent bypassing of Yelp's free-tier limit

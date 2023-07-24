@@ -27,7 +27,7 @@ const ResultsScreen = () => {
   }
 
   return (
-    <Card width="100%">
+    <Card>
       <Text variant="h1">Search Results Listing</Text>
       <FlatList
         data={result.photos}

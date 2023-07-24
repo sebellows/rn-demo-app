@@ -24,7 +24,7 @@ type ActivityIndicatorProps = BoxProps<Theme> & {
   animating?: boolean
 
   /** Set custom color for border color of indicator. */
-  variant?: keyof ConditionalExcept<Theme['border'], number>
+  variant?: keyof Theme['colors']
 
   /**
    * Size of the indicator.

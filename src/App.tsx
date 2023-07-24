@@ -8,7 +8,6 @@ import { Asset } from 'expo-asset'
 import { Assets } from '@react-navigation/elements'
 import { InitialState, Theme as RNNavigationTheme } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { ThemeProvider } from '@shopify/restyle'
 
 import { updateTheme } from './theme'

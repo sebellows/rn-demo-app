@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { PixelRatio, Platform } from 'react-native'
+import { Platform } from 'react-native'
 import { Asset } from 'expo-asset'
 
-import { Box, Card, Text } from '../../components'
-import { Image } from '../../components/Image'
+import { Box, Card, Image, Text } from '../../components'
 import { YelpDto } from '../../types/YelpDto'
 
 const loadStarsByRating = async (rating: number): Promise<Asset[]> => {

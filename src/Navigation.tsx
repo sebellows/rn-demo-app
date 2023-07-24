@@ -9,17 +9,6 @@ import {
 import SearchScreen from './screens/Search.screen'
 import ResultsScreen from './screens/ResultDetails.screen'
 import { RootStackParamList } from './routes'
-import { IconButton } from './components'
-
-type HeaderIconButtonProps = {
-  icon: string
-  onPress: () => void
-}
-
-function HeaderIconButton(props: HeaderIconButtonProps) {
-  let { icon, onPress } = props
-  return <IconButton name={icon} onPress={onPress} color="primary" mr="8" />
-}
 
 const Stack = createStackNavigator<RootStackParamList>()
 

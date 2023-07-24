@@ -2,7 +2,7 @@ import { FlatList, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import { YelpDto } from '../../types/YelpDto'
-import { Button, Card, Text } from '../../components'
+import { Card, Text } from '../../components'
 
 import { ResultsItem } from './ResultsItem'
 

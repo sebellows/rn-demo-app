@@ -9,7 +9,6 @@ import {
   cancelAnimation,
   interpolate,
 } from 'react-native-reanimated'
-import { ConditionalExcept } from 'type-fest'
 import { BoxProps } from '@shopify/restyle'
 
 import { range } from '../utils'

@@ -2,8 +2,9 @@ import { useEffect, useMemo, useRef } from 'react'
 import { Platform } from 'react-native'
 import { Asset } from 'expo-asset'
 
-import { Box, Card, Image, Text } from '../../components'
+import { Box, Card, Icon, Image, Text } from '../../components'
 import { YelpDto } from '../../types/YelpDto'
+import { distanceMetersToMiles } from './Search.utils'
 
 const loadStarsByRating = async (rating: number): Promise<Asset[]> => {
   const isAndroid = Platform.OS === 'android'
@@ -96,9 +97,7 @@ const RATING_STAR_SIZE_W = 82
 const ResultsItem = ({ result }: { result: YelpDto.Business }) => {
   const asset = useRef<Asset | null>(null)
 
-  // const starsIconWidth = PixelRatio.getPixelSizeForLayoutSize(RATING_STAR_SIZE_W)
-  // const starsIconHeight = PixelRatio.getPixelSizeForLayoutSize(RATING_STAR_SIZE_H)
-  const distance = useMemo(() => Number((result.distance / 1609.34).toFixed(1)), [])
+  const distance = useMemo(() => distanceMetersToMiles(result.distance), [])
 
   useEffect(() => {
     async function loadRatingStars() {
@@ -114,7 +113,7 @@ const ResultsItem = ({ result }: { result: YelpDto.Business }) => {
   return (
     <Card p="0">
       <Image
-        width={250}
+        width={'100%'}
         height={120}
         borderRadius="md"
         mb="1.5"
@@ -126,7 +125,7 @@ const ResultsItem = ({ result }: { result: YelpDto.Business }) => {
           {distance} mi
         </Text>
       </Box>
-      <Box flexDirection="row" alignItems="center" mb="0.5">
+      <Box flexDirection="row" alignItems="center" flexWrap="nowrap" mb="1.5">
         {asset.current?.localUri && (
           <Box pr="1">
             <Image
@@ -138,25 +137,23 @@ const ResultsItem = ({ result }: { result: YelpDto.Business }) => {
             />
           </Box>
         )}
-        <Box>
-          <Text variant="small" color="mutedFg">
-            {result.review_count} Reviews
-          </Text>
-        </Box>
+        <Text variant="small" fontWeight="600" mr="0.5">
+          {result.rating}
+        </Text>
+        <Text variant="small" color="mutedFg">
+          ({result.review_count} reviews)
+        </Text>
       </Box>
-      <Box flexDirection="row" mb="1">
+      <Box flexDirection="row" mb="2">
+        <Icon name="map-pin" color="mutedFg" mr="1" />
         <Text variant="small" color="mutedFg">
           {result.location.city}
         </Text>
         <Text variant="small" color="mutedFg">
           {' • '}
         </Text>
-        <Text variant="small" color="mutedFg">
-          {result.price}
-        </Text>
-        <Text variant="small" color="mutedFg">
-          {' • '}
-        </Text>
+        <Text variant="small">{result.price}</Text>
+        <Text variant="small">{' • '}</Text>
         <Text variant="small" color={result.is_closed ? 'danger' : 'success'} fontWeight="500">
           {result.is_closed ? 'Closed' : 'Open'}
         </Text>

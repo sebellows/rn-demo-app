@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { api } from '../api'
 import { YelpDto } from '../../types/YelpDto'
 import { NativeSyntheticEvent, TextInputEndEditingEventData } from 'react-native'
@@ -6,7 +6,12 @@ import { NativeSyntheticEvent, TextInputEndEditingEventData } from 'react-native
 type SearchApi = (e: NativeSyntheticEvent<TextInputEndEditingEventData>) => Promise<void>
 type SearchResults = YelpDto.Business[]
 
-export const useApi = (): [SearchApi, SearchResults, string] => {
+export const useApi = (): {
+  search: SearchApi
+  results: SearchResults
+  updateResults: Dispatch<SetStateAction<SearchResults>>
+  errorMessage: string
+} => {
   const [results, setResults] = useState<YelpDto.Business[]>([])
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -32,5 +37,5 @@ export const useApi = (): [SearchApi, SearchResults, string] => {
     }
   }
 
-  return [searchApi, results, errorMessage]
+  return { search: searchApi, results, updateResults: setResults, errorMessage }
 }

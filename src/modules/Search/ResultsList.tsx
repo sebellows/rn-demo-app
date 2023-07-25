@@ -1,4 +1,4 @@
-import { Dimensions, FlatList, TouchableOpacity } from 'react-native'
+import { FlatList, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import { YelpDto } from '../../types/YelpDto'
@@ -19,8 +19,6 @@ const ResultsList = ({ title, results }: { title: string; results: YelpDto.Busin
         {title}
       </Text>
       <FlatList
-        // horizontal
-        // showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         data={results}
         keyExtractor={result => result.id}

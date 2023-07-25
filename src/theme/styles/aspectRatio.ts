@@ -1,6 +1,11 @@
 import { Dimensions } from '@shopify/restyle'
 import { Dimensions as RNDimensions } from 'react-native'
 
+/**
+ * TODO: Aspect-Ratios have not been implemented in the theme yet. This
+ * should be removed if there are no future plans to move forward with them.
+ */
+
 export type AspectRatio = `${string}:${string}`
 
 export const isAspectRatio = (value: unknown): value is AspectRatio => {

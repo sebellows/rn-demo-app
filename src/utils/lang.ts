@@ -31,11 +31,17 @@ import { hasOwn } from './common'
  */
 export const _protoToString = Object.prototype.toString
 
+/**
+ * Extract the JS object type from the prototype's `toString` method.
+ *
+ * @example
+ * Object.prototype.toString.call(null)
+ * => "[object Null]"
+ *
+ * getType(null)
+ * => "Null"
+ */
 export function getType(value: unknown): string {
-  if (value === null) {
-    return 'Null'
-  }
-
   return _protoToString.call(value).slice(8, -1)
 }
 

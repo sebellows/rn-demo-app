@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { GestureResponderEvent, ScrollView } from 'react-native'
-import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet'
+import BottomSheet from '@gorhom/bottom-sheet'
 
 import { ResultsList, SearchBar } from '../modules'
 import { useApi } from '../api'
@@ -15,9 +15,6 @@ import {
   Text,
 } from '../components'
 import { YelpDto } from '../types/YelpDto'
-import { GestureHandlerGestureEvent } from 'react-native-gesture-handler'
-
-const PriceFilters = ['$', '$$', '$$$']
 
 const ResultFilters = {
   open: (result: YelpDto.Business) => result.is_closed !== true,
@@ -85,18 +82,9 @@ const SearchScreen = () => {
 
   /** Callback when the sheet position changed to a provided point. */
   const handleBottomSheetChange = useCallback((index: number) => {
+    // TODO: dismiss BottomSheet following sort-filter selection
     console.log('handleBottomSheetChange', index)
   }, [])
-
-  // const filterResultsByPrice = useCallback(
-  //   (price: string) => {
-  //     // price === '$' || '$$' || '$$$'
-  //     return results.filter(result => {
-  //       return result.price === price
-  //     })
-  //   },
-  //   [results],
-  // )
 
   const handleSortingChange = (e: string | GestureResponderEvent) => {
     let sortingFilterValue = typeof e === 'string' ? e : e.nativeEvent.target

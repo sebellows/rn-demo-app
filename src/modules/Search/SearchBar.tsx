@@ -1,4 +1,3 @@
-import React from 'react'
 import { TextInputEndEditingEventData, NativeSyntheticEvent } from 'react-native'
 
 import { Card, Icon, TextField } from '../../components'

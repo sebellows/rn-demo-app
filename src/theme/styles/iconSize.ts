@@ -16,7 +16,11 @@ export type IconSizeKey = keyof typeof IconSize
 export const parseIconSize = (size: IconSizeKey | number): number =>
   typeof size === 'number' ? size : size in IconSize ? IconSize[size] : IconSize.small
 
-export const iconSizeProps = (size: IconSizeKey | number) => {
+/**
+ * Uncomment in the future if moving to SVG icons instead
+ * of an icon font-family coming from @expo/vector-icons.
+ */
+export const iconDimensionsFromSize = (size: IconSizeKey | number) => {
   const value = parseIconSize(size)
 
   return {

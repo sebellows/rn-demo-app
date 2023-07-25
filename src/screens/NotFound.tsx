@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
 
 import type { StackNavProp, StackRouteProp } from '../routes'

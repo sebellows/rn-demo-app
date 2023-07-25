@@ -14,7 +14,7 @@ import { BoxProps } from '@shopify/restyle'
 import { range } from '../utils'
 import { Theme } from '../theme'
 import { useGlobalSettings } from '../GlobalContext'
-import { IconSizeKey, iconSizeProps, parseIconSize } from '../theme/styles'
+import { IconSizeKey, iconDimensionsFromSize, parseIconSize } from '../theme/styles'
 
 import { AnimatedBox } from './AnimatedBox'
 
@@ -140,7 +140,7 @@ const LoadingIndicator = ({
   })
 
   const size = parseIconSize(indicatorSize)
-  const { width, height } = iconSizeProps(indicatorSize)
+  const { width, height } = iconDimensionsFromSize(indicatorSize)
 
   return (
     <AnimatedBox
